@@ -15,7 +15,7 @@ from .SimpleDevices import BeamSplitter
 
 from ..Photon import Photon, Empty_Photon, Photon_dtype
 
-from ..utils import display_class_instances_data
+from ..utils.HelperPlots import display_class_instances_data
 
 class AsymmetricMachZehnderInterferometer(Component):
     """
@@ -56,7 +56,8 @@ class AsymmetricMachZehnderInterferometer(Component):
         default_record['frequency'] = Empty_Photon.frequency
         default_record['photon_number'] = Empty_Photon.photon_number
         default_record['source_phase'] = Empty_Photon.source_phase
-
+        default_record['photon_id'] = Empty_Photon.photon_id
+        default_record['qubit_index'] = Empty_Photon.qubit_index
         default_record['quantum_entangler'] = Empty_Photon.quantum_entangler
         
         # Fill the entire buffer with this stored default record
@@ -130,7 +131,8 @@ class AsymmetricMachZehnderInterferometer(Component):
         self._field_buffer[self._buffer_idx]['frequency'] = photon_long.frequency
         self._field_buffer[self._buffer_idx]['photon_number'] = photon_long.photon_number
         self._field_buffer[self._buffer_idx]['source_phase'] = photon_long.source_phase
-
+        self._field_buffer[self._buffer_idx]['photon_id'] = photon_long.photon_id
+        self._field_buffer[self._buffer_idx]['qubit_index'] = photon_long.qubit_index
         self._field_buffer[self._buffer_idx]['quantum_entangler'] = Empty_Photon.quantum_entangler
         
         # Stored Photon
@@ -139,8 +141,9 @@ class AsymmetricMachZehnderInterferometer(Component):
             frequency=outgoing_photon['frequency'].item(),
             photon_number=outgoing_photon['photon_number'].item(),
             source_phase=outgoing_photon['source_phase'].item(),
-          
-            quantum_entangler=outgoing_photon['quantum_entangler']          # Python objects should be stored/retrieved intact
+            photon_id=outgoing_photon['photon_id'].item(),
+            qubit_index=outgoing_photon['qubit_index'].item(),
+            quantum_entangler=outgoing_photon['quantum_entangler']    # Python objects should be stored/retrieved intact
         )
 
         self._buffer_idx = (self._buffer_idx + 1) % self._buffer_size

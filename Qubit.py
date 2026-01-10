@@ -1,26 +1,21 @@
-import gc
-
 from LaserPy_Quantum import Photon
-from LaserPy_Quantum.QuantumOptics.Entangler import QuantumEntangler
-
-# gc.set_debug(gc.DEBUG_COLLECTABLE)
+from LaserPy_Quantum.QuantumOptics.Gates import Gates
 
 A = Photon()
 B = Photon()
-
-QE = QuantumEntangler((A, B))
-# A.quantum_entangler = QE_AB
-# B.quantum_entangler = QE_AB
-QE.sync_qubits()
-
-print(A.quantum_entangler)
-
 C = Photon()
 
-QE = QE + C.set_qubit()
-QE.sync_qubits()
+def entangle(photon_tuple: tuple[Photon,...]):
+    QE = photon_tuple[0].set_qubit()
+    for photon in photon_tuple[1:]:
+        QE = QE + photon.set_qubit()
+entangle((A, B))
 
-gc.collect()
+Gates.H(A)
+
+print(B.quantum_entangler)
+
+entangle((B, C))
 
 print(C.quantum_entangler)
-
+print(A.quantum_entangler)
