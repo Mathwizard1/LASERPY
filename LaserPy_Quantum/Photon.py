@@ -44,7 +44,7 @@ class Photon:
     photon_id: int = datafield(default_factory= _next_photon_id)
 
     # Quantum parameters
-    qubit_index: int = 0
+    qubit_index: int = -1
     quantum_entangler: QuantumEntangler|None = None
 
     # Allowing Uid based-hashing
