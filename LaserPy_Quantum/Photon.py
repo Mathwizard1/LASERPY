@@ -83,7 +83,7 @@ class Photon:
         """phase (rad) of the field"""
         return float(angle(self.field))
 
-    def set_qubit(self):        
+    def qubit(self):        
         QE = self.quantum_entangler
         if(QE is None):
             QE = QuantumEntangler((self,))

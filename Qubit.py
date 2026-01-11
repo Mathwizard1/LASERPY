@@ -5,18 +5,15 @@ A = Photon()
 B = Photon()
 C = Photon()
 
-#Gates.H(A)
-
 def entangle(photon_tuple: tuple[Photon,...]):
-    QE = photon_tuple[0].set_qubit()
+    QE = photon_tuple[0].qubit()
     for photon in photon_tuple[1:]:
-        QE = QE + photon.set_qubit()
-entangle((A, B))
+        QE = QE + photon.qubit()
+entangle((A, B, C))
 
-Gates.H(B)
-Gates.Y(B)
-
-print(B.quantum_entangler)
+Gates.H(A)
+Gates.CNOT(B, A)
+Gates.CNOT(C, A)
 
 print(C.quantum_entangler)
 

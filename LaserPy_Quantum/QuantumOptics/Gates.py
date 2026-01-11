@@ -11,10 +11,19 @@ from ..Photon import Photon
 class Gates:
     @staticmethod
     def _gate(matrix: ndarray, target: Photon, control: Photon|None = None):
-        QE = target.set_qubit()
-        if(control):
-            pass
+        # Ensure the target has an entangler
+        QE = target.qubit()
+        
+        if control:
+            # Ensure the control has an entangler and are in same state
+            QE_control = control.qubit()
+            
+            if QE != QE_control: QE = QE + QE_control 
+            
+            # Apply the 2-qubit gate
+            QE.quantum_state._double_qubit_gate(matrix, target.qubit_index, control.qubit_index)
         else:
+            # Apply the 1-qubit gate
             QE.quantum_state._single_qubit_gate(matrix, target.qubit_index)
 
     @staticmethod
@@ -53,5 +62,12 @@ class Gates:
         Gates._gate(matrix, target)
 
     @staticmethod
-    def CNOT(target: Photon, control:Photon) -> None:
-        pass
+    def CNOT(target: Photon, control: Photon) -> None:
+        """CNOT gate: |T> -> X|C>"""
+        cnot_matrix = array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 0]
+        ], dtype=complex)
+        Gates._gate(cnot_matrix, target, control)
