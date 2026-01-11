@@ -15,6 +15,9 @@ from .Components import ArbitaryWaveGenerator
 from .Components import Connection
 from .Components import Simulator
 
+from .QuantumOptics import QuantumEntangler
+from .QuantumOptics import Gates
+
 from .SpecializedComponents import ModulationFunction
 from .SpecializedComponents import CurrentDriver
 from .SpecializedComponents import Laser
@@ -41,6 +44,9 @@ __all__ = [
     
     "Connection",
     "Simulator",
+
+    "QuantumEntangler",
+    "Gates",
 
     "ModulationFunction",
     "CurrentDriver",

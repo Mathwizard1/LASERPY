@@ -1,7 +1,10 @@
 """ QuantumOptics for LaserPy_Quantum """
 
-# from .Entangler import PolarizationBasis
+from .Entangler import QuantumEntangler
 
-# __all__ = [
-#     "PolarizationBasis"
-# ]
+from .Gates import Gates
+
+__all__ = [
+    "QuantumEntangler",
+    "Gates"
+]
