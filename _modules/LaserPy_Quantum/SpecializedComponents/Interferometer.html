@@ -89,7 +89,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..Photon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">Empty_Photon</span><span class="p">,</span> <span class="n">Photon_dtype</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_class_instances_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.HelperPlots</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_class_instances_data</span>
 
 <div class="viewcode-block" id="AsymmetricMachZehnderInterferometer">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.SpecializedComponents.AsymmetricMachZehnderInterferometer">[docs]</a>
@@ -132,7 +132,8 @@
         <span class="n">default_record</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Empty_Photon</span><span class="o">.</span><span class="n">frequency</span>
         <span class="n">default_record</span><span class="p">[</span><span class="s1">&#39;photon_number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Empty_Photon</span><span class="o">.</span><span class="n">photon_number</span>
         <span class="n">default_record</span><span class="p">[</span><span class="s1">&#39;source_phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Empty_Photon</span><span class="o">.</span><span class="n">source_phase</span>
-
+        <span class="n">default_record</span><span class="p">[</span><span class="s1">&#39;photon_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Empty_Photon</span><span class="o">.</span><span class="n">photon_id</span>
+        <span class="n">default_record</span><span class="p">[</span><span class="s1">&#39;qubit_index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Empty_Photon</span><span class="o">.</span><span class="n">qubit_index</span>
         <span class="n">default_record</span><span class="p">[</span><span class="s1">&#39;quantum_entangler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Empty_Photon</span><span class="o">.</span><span class="n">quantum_entangler</span>
         
         <span class="c1"># Fill the entire buffer with this stored default record</span>
@@ -223,7 +224,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_field_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span><span class="p">][</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">photon_long</span><span class="o">.</span><span class="n">frequency</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_field_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span><span class="p">][</span><span class="s1">&#39;photon_number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">photon_long</span><span class="o">.</span><span class="n">photon_number</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_field_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span><span class="p">][</span><span class="s1">&#39;source_phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">photon_long</span><span class="o">.</span><span class="n">source_phase</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_field_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span><span class="p">][</span><span class="s1">&#39;photon_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">photon_long</span><span class="o">.</span><span class="n">photon_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_field_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span><span class="p">][</span><span class="s1">&#39;qubit_index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">photon_long</span><span class="o">.</span><span class="n">qubit_index</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_field_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span><span class="p">][</span><span class="s1">&#39;quantum_entangler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Empty_Photon</span><span class="o">.</span><span class="n">quantum_entangler</span>
         
         <span class="c1"># Stored Photon</span>
@@ -232,8 +234,9 @@
             <span class="n">frequency</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
             <span class="n">photon_number</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;photon_number&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
             <span class="n">source_phase</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;source_phase&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-          
-            <span class="n">quantum_entangler</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;quantum_entangler&#39;</span><span class="p">]</span>          <span class="c1"># Python objects should be stored/retrieved intact</span>
+            <span class="n">photon_id</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;photon_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="n">qubit_index</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;qubit_index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="n">quantum_entangler</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;quantum_entangler&#39;</span><span class="p">]</span>    <span class="c1"># Python objects should be stored/retrieved intact</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span>
