@@ -1,11 +1,10 @@
 from LaserPy_Quantum import Clock
 from LaserPy_Quantum import Connection, Simulator
 from LaserPy_Quantum import (
-    ArbitaryWave,
     StaticWave, PulseWave, AlternatingPulseWave,
     ArbitaryWaveGenerator
 )
-from LaserPy_Quantum import CurrentDriver
+from LaserPy_Quantum import ModulationFunction, CurrentDriver
 from LaserPy_Quantum import Laser
 
 from LaserPy_Quantum import VariableOpticalAttenuator
@@ -52,19 +51,6 @@ AWG = ArbitaryWaveGenerator()
 AWG.set((mBase, mModulation))
 AWG.set(sBase)
 
-class ModulationFunction(ArbitaryWave):
-    def __init__(self, signal_name: str, t_unit: float, total_spread: float = 1):
-        super().__init__(signal_name, t_unit, total_spread)
-        self.idx = 0
-        self.modulation_bit = 1
-
-    def WaveSignal(self, t):
-        if(t <= dt):
-            self.idx = (self.idx + 1) % len(modulation_bits)
-        return modulation_bits[self.idx] == self.modulation_bit
-
-mod_func = ModulationFunction("modulation_function", t_unit)
-
 ############################################################################
 
 current_driver1 = CurrentDriver(AWG)
@@ -87,7 +73,9 @@ AMZI = AsymmetricMachZehnderInterferometer(simulator_clock, time_delay= t_unit)
 simulator.set((
     Connection(simulator_clock, (current_driver1, current_driver2)),
     Connection(current_driver1, master_laser),
-    Connection(current_driver2, slave_laser),
+    Connection(master_laser, VOA),
+    Connection((current_driver2, VOA), slave_laser),
+    Connection(slave_laser, AMZI)
 ))
 
 simulator.reset(True)
@@ -95,7 +83,7 @@ simulator.reset(True)
 simulator.simulate()
 time_data = simulator.get_data()
 
-#display_class_instances_data((master_laser, slave_laser), time_data)
+display_class_instances_data((master_laser, slave_laser), time_data)
 
 #exit(code= 0)
 ############################################################################
@@ -107,24 +95,18 @@ else:
 
 slave_laser.set_slave_Laser()
 
-simulator.set((
-    Connection(simulator_clock, (current_driver1, current_driver2)),
-    Connection(current_driver1, master_laser),
-    Connection(master_laser, VOA),
-    Connection((current_driver2, VOA), slave_laser),
-))
-
 simulator.reset(True)
 
 simulator.simulate()
 time_data = simulator.get_data()
 
-#display_class_instances_data((master_laser, slave_laser), time_data)
+display_class_instances_data((master_laser, slave_laser), time_data)
 
 #exit(code= 0)
 ############################################################################
 
-modulation_bits = [0,0] + [1,0,1,0,1,1,1,0,0,1]
+modulation_bits = (0,0) + (1,0,1,0,1,1,1,0,0,1) # Sequence
+mod_func = ModulationFunction("modulation_function", t_unit, dt, modulation_bits)
 
 if(RESET_MODE):
     simulator.reset_data()
@@ -135,14 +117,6 @@ else:
     simulator_clock.set(t_final)
 
 current_driver1.set(mBase, (mBase, mModulation), mod_func)
-
-simulator.set((
-    Connection(simulator_clock, (current_driver1, current_driver2)),
-    Connection(current_driver1, master_laser),
-    Connection(master_laser, VOA),
-    Connection((current_driver2, VOA), slave_laser),
-    Connection(slave_laser, AMZI)
-))
 
 simulator.reset(True)
 

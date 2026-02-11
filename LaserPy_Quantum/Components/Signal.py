@@ -1,4 +1,4 @@
-from typing import Self
+from typing import Any, Self
 
 from numpy import (
     random,
@@ -10,6 +10,8 @@ from .Component import Clock
 from ..Constants import ERR_TOLERANCE
 
 from uuid import uuid4
+
+########################################################
 
 class SignalID:
     def __init__(self, name:str) -> None:
@@ -120,6 +122,15 @@ class AlternatingPulseWave(ArbitaryWave):
             return self.static_val + self.pulse_val * self.sign
         return self.static_val
     
+########################################################
+
+class SourceModule:
+    def __init__(self) -> None:
+        pass
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        pass
+
 ########################################################
 
 class ArbitaryWaveGenerator:

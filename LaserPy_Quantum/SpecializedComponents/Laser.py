@@ -6,7 +6,7 @@ from numpy import (
 )
 
 from ..Components.Component import Clock
-from ..Components.Component import PhysicalComponent
+from ..Components.Component import DataComponent, TimeComponent
 
 from ..Components.Signal import NoNoise
 
@@ -17,7 +17,7 @@ from ..Constants import ERR_TOLERANCE
 
 from ..Photon import Photon
 
-class Laser(PhysicalComponent):
+class Laser(DataComponent, TimeComponent):
     """
     Laser class
     """
@@ -65,7 +65,7 @@ class Laser(PhysicalComponent):
         self._free_running_freq = 2 * pi * UniversalConstants.C.value / laser_wavelength
         """free running frequency data for Laser"""
 
-        self._data: Photon = Photon(ERR_TOLERANCE + 0j, self._free_running_freq)
+        self._photon_data: Photon = Photon(ERR_TOLERANCE + 0j, self._free_running_freq)
         """Photon class data for Laser"""
 
         # Noise classes for simulations
@@ -107,7 +107,7 @@ class Laser(PhysicalComponent):
 
     def simulate(self, clock: Clock, current: float, photon: Photon|tuple[Photon,...]|None = None):
         """Laser simulate method"""
-        #return super().simulate(clock, _data)
+        #return super().simulate(clock)
 
         # Save current in its variable
         self.current = current
@@ -141,9 +141,9 @@ class Laser(PhysicalComponent):
         self.photon_number = max(self.photon_number, ERR_TOLERANCE)
 
         # Optical field
-        self._data.field = sqrt(self._power()) * exp(1j * self.phase)
-        self._data.photon_number = self.photon_number
-        self._data.source_phase = self.phase
+        self._photon_data.field = sqrt(self._power()) * exp(1j * self.phase)
+        self._photon_data.photon_number = self.photon_number
+        self._photon_data.source_phase = self.phase
 
     def input_port(self):
         """Laser input port method""" 
@@ -155,5 +155,5 @@ class Laser(PhysicalComponent):
         """Laser output port method""" 
         #return super().output_port(kwargs)
         if('photon' in kwargs):
-            kwargs['photon'] = self._data
+            kwargs['photon'] = self._photon_data
         return kwargs

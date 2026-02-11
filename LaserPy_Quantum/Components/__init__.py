@@ -3,7 +3,6 @@
 from .Component import Clock
 from .Component import TimeComponent
 from .Component import DataComponent
-from .Component import PhysicalComponent
 
 from .Signal import LangevinNoise
 from .Signal import (
@@ -21,7 +20,6 @@ __all__ = [
     "Clock",
     "TimeComponent",
     "DataComponent",
-    "PhysicalComponent",
 
     "LangevinNoise",
     "ArbitaryWave",

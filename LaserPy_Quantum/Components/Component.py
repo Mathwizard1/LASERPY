@@ -283,16 +283,9 @@ class TimeComponent(Component):
     ----------
     name : str = `"default_time_component"`
         Name of the component
-        
-    Attributes
-    ----------
-    _data: any = `0`
-        A container for specific data according to child classes
     """
     def __init__(self, name:str="default_time_component"):
         super().__init__(name)
-        self._data = 0
-        """data for TimeComponent"""
 
     def simulate(self, clock:Clock):
         """
@@ -496,30 +489,4 @@ class DataComponent(Component):
         for key in kwargs:
             if hasattr(self, key):
                 kwargs[key] = getattr(self, key)
-        return kwargs
-
-class PhysicalComponent(DataComponent, TimeComponent):
-    """
-    PhysicalComponent class
-    """
-    def __init__(self, name:str="default_physical_component"):
-        super().__init__(name)  
-
-        self._data: float = 0.0
-        """PhysicalComponent _data value to override"""
-
-        self._simulation_data = {'_data':[]}
-        self._simulation_data_units = {'_data':r" $(u)$"}
-
-    def simulate(self, clock: Clock, _data: float|None=None):
-        """PhysicalComponent simulate method to override"""
-        #return super().simulate(args)
-        if(_data):
-            self._data += 1
-        else:
-            self._data = 100
-
-    def input_port(self):
-        """PhysicalComponent input port method to override"""
-        kwargs = {'clock':None, '_data': None}
         return kwargs
