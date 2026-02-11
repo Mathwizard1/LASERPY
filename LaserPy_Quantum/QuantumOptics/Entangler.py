@@ -2,17 +2,19 @@ from __future__ import annotations
 
 from .QuantumState import QuantumState
 
+QuantumStateModel = QuantumState
+
 class QuantumEntangler:
-    def __init__(self, photons: tuple[Photon,...], quantum_state: QuantumState|None= None, sync= True) -> None:
+    def __init__(self, photons: tuple[Photon,...], quantum_state: QuantumStateModel|None= None, sync= True) -> None:
         self.photons: tuple[Photon,...] = photons
-        self.quantum_state = quantum_state if(quantum_state) else QuantumState(len(photons))
+        self.quantum_state = quantum_state if(quantum_state) else QuantumStateModel(len(photons))
 
         if sync: self.sync_qubits()
 
     def __repr__(self) -> str:
         string = "QuantumEntangler:\n"
         for photon in self.photons:
-            string += f"photon:{photon.photon_id} qubit:{photon.qubit_index}\n"
+            string += f"{photon!r}\n"
         string += str(self.quantum_state)
         return string
     

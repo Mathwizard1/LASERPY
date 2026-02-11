@@ -3,7 +3,7 @@ from __future__ import annotations
 from numpy import (
     ndarray,
     array,
-    cos, sin, exp, 
+    cos, sin, exp,
     sqrt,
 )
 
@@ -11,18 +11,44 @@ from ..Photon import Photon
 
 class Gates:
     @staticmethod
-    def _gate(matrix: ndarray, target: Photon, control: Photon|None = None):
+    def __qubits_check(qubits: tuple[Photon, ...]):
+        if(len(set(qubits)) != len(qubits)):
+            raise IndexError(f"{qubits!r} cannot contain duplicates.")
+
+    @staticmethod
+    def _n_qubit_gate(matrix: ndarray, qubits: tuple[Photon, ...]):
+        Gates.__qubits_check(qubits)
+        
+        QE = qubits[-1].qubit()
+        qubit_idx = []
+        for qubit in qubits:
+            if QE is not qubit.qubit(): 
+                raise AssertionError(f"{qubits[-1]!r} is not entangled with {qubit!r}.")
+            qubit_idx.append(qubit.qubit_index)
+        return QE.quantum_state._n_qubit_gate(matrix, tuple(qubit_idx))
+
+    @staticmethod
+    def _gate(matrix: ndarray, target: Photon, control1: Photon|None = None, control2: Photon|None = None):        
         # Ensure the target has an entangler
         QE = target.qubit()
         
-        if control:
-            # Ensure the control has an entangler and are in same state
-            QE_control = control.qubit()
-            
-            if QE != QE_control: QE = QE + QE_control 
+        if control1 and control2:
+            Gates.__qubits_check((control1, control2, target))
+
+            # Ensure the control has an entangler and are in same state            
+            if QE is not control1.qubit(): raise AssertionError(f"{target!r} is not entangled with {control1!r}.")
+            elif QE is not control2.qubit(): raise AssertionError(f"{target!r} is not entangled with {control2!r}.")
+
+            # Apply the 3-qubit gate
+            QE.quantum_state._triple_qubit_gate(matrix, target.qubit_index, control1.qubit_index, control2.qubit_index)
+        elif control1:
+            Gates.__qubits_check((control1, target))
+
+            # Ensure the control has an entangler and are in same state            
+            if QE is not control1.qubit(): raise AssertionError(f"{target!r} is not entangled with {control1!r}.") 
             
             # Apply the 2-qubit gate
-            QE.quantum_state._double_qubit_gate(matrix, target.qubit_index, control.qubit_index)
+            QE.quantum_state._double_qubit_gate(matrix, target.qubit_index, control1.qubit_index)
         else:
             # Apply the 1-qubit gate
             QE.quantum_state._single_qubit_gate(matrix, target.qubit_index)
@@ -40,6 +66,8 @@ class Gates:
 
         QE = target.qubit()
         return QE.quantum_state._measure_all_gate(shots)
+
+############################################################################
 
     @staticmethod
     def I(target: Photon) -> None:
@@ -111,6 +139,8 @@ class Gates:
                         [exp(1j * phi) * sin(theta / 2), exp(1j * (phi + lmbda)) * cos(theta / 2)]], dtype=complex)
         Gates._gate(matrix, target)
 
+############################################################################
+
     @staticmethod
     def CNOT(target: Photon, control: Photon) -> None:
         """CNOT gate: |T> -> X|C>"""
@@ -142,13 +172,11 @@ class Gates:
             [0, 0, 1, 0],
             [0, 0, 0, exp(1j * theta)]
         ], dtype=complex)
-        Gates._gate(cp_matrix, control, target)
+        Gates._gate(cp_matrix, target, control)
 
     @staticmethod
     def SWAP(target: Photon, control: Photon) -> None:
         """Swap gate: |i...j> -> |j...i>"""
-        if(target is control): return # No self swap
-
         swap_matrix = array([
             [1, 0, 0, 0],
             [0, 0, 1, 0],
@@ -156,3 +184,18 @@ class Gates:
             [0, 0, 0, 1]
         ], dtype=complex)
         Gates._gate(swap_matrix, target, control)
+
+    @staticmethod
+    def CCNOT(target: Photon, control1: Photon, control2: Photon) -> None:
+        """CCNOT gate"""
+        ccnot_matrix = array([
+            [1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 0, 0, 1, 0],
+        ], dtype=complex)
+        Gates._gate(ccnot_matrix, target, control1, control2)

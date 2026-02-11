@@ -54,8 +54,11 @@ class Photon:
     def __eq__(self, other: Photon):
         return self.photon_id == other.photon_id
 
-    def __repr__(self):
+    def __str__(self) -> str:
         return (f"Photon(ω={self.frequency:.4e}rad/s, |E|={self.amplitude:.4e}V/m, φ={self.phase:.2f}rad, id={self.photon_id})")
+
+    def __repr__(self) -> str:
+        return (f"Photon(id={self.photon_id}, qubit_idx={self.qubit_index})")
 
     @classmethod
     def from_photon(cls, other: Photon) -> Photon:
