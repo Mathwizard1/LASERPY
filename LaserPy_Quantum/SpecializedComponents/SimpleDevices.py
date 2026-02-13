@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from numpy import (
     mod, exp, sqrt,
     pi
@@ -7,25 +9,25 @@ from ..Components.Component import Component
 
 from ..Photon import Photon, Empty_Photon
 
-class PhaseSample(Component):
+class PhaseCell(Component):
     """
-    PhaseSample class
+    PhaseCell class
     """
-    def __init__(self, phase_delay: float = 0.0, name: str = "default_phase_sample"):
+    def __init__(self, phase_delay: float = 0.0, name: str = "default_phase_cell"):
         super().__init__(name)
 
         self._phase_interval = 2 * pi
-        """phase interval for PhaseSample"""
+        """phase interval for PhaseCell"""
 
         phase_delay = mod(phase_delay, self._phase_interval)
         self._phase_change = exp(1j * phase_delay)
-        """phase change for PhaseSample"""
+        """phase change for PhaseCell"""
 
         self._photon: Photon = Empty_Photon
-        """photon data for PhaseSample"""
+        """photon data for PhaseCell"""
 
     def set(self, phase_delay: float, phase_interval: float|None= None):
-        """PhaseSample set method"""
+        """PhaseCell set method"""
         #return super().set()
         if(phase_interval):
             self._phase_interval = phase_interval
@@ -33,7 +35,7 @@ class PhaseSample(Component):
         self._phase_change = exp(1j * phase_delay)
 
     def simulate(self, photon: Photon):
-        """PhaseSample simulate method"""
+        """PhaseCell simulate method"""
         #return super().simulate(args)
         self._photon = Photon.from_photon(photon)
 
@@ -42,18 +44,18 @@ class PhaseSample(Component):
         return self._photon
 
     def input_port(self):
-        """PhaseSample input port method"""
+        """PhaseCell input port method"""
         #return super().input_port()
         kwargs = {'photon':None}
         return kwargs
     
     def output_port(self, kwargs: dict = {}):
-        """PhaseSample output port method"""
+        """PhaseCell output port method"""
         #return super().output_port(kwargs)
         kwargs['photon'] = self._photon
         return kwargs
     
-class Mirror(PhaseSample):
+class Mirror(PhaseCell):
     """
     Mirror class
     """

@@ -490,3 +490,5 @@ class DataComponent(Component):
             if hasattr(self, key):
                 kwargs[key] = getattr(self, key)
         return kwargs
+    
+# PhysicalComponent(DataComponent, TimeComponent)

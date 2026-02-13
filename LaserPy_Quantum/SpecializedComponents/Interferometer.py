@@ -10,7 +10,7 @@ from ..Components.Component import Clock
 
 from .PhotonDetector import SinglePhotonDetector
 
-from .SimpleDevices import PhaseSample
+from .SimpleDevices import PhaseCell
 from .SimpleDevices import BeamSplitter
 
 from ..Photon import Photon, Empty_Photon, Photon_dtype
@@ -32,8 +32,8 @@ class AsymmetricMachZehnderInterferometer(Component):
         self._output_beam_joiner = BeamSplitter(splitting_ratio_tf, name="output_beam_joiner")
 
         # Phase controls
-        self._short_arm_phase_sample = PhaseSample(name="short_arm_phase_sample")
-        self._long_arm_phase_sample = PhaseSample(name="long_arm_phase_sample")
+        self._short_arm_phase_sample = PhaseCell(name="short_arm_phase_cell")
+        self._long_arm_phase_sample = PhaseCell(name="long_arm_phase_cell")
 
         # Measure ports
         self._SPD0 = SinglePhotonDetector(name="SPD_0")

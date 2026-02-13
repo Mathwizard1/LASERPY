@@ -5,6 +5,10 @@ from enum import Enum
 from importlib import resources
 import json
 
+from numpy.random import (
+    default_rng
+)
+
 #import rust_optimizer
 
 # fixed Scientific Constants
@@ -71,6 +75,8 @@ ERR_TOLERANCE = 1.0e-12
 
 FIG_WIDTH = 12
 FIG_HEIGHT = 6
+
+RND_GEN = default_rng()
 
 # if __name__ == "__main__":
 #     constants = rust_optimizer.UniversalConstant

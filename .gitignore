@@ -8,9 +8,11 @@ bench/__pycache__/*
 laser dynamics and optical injection lock.pdf
 CVQKD.pdf
 Quantum fused Networks.pdf
+Technical_Report_SPDC_Module_Simulation_for_Quantum_Memory.pdf
 
 LaserPy_Quantum/rust_optimizer/target/*
 
 LaserPy.egg-info/*
 dist/*
 LaserPy_Quantum.egg-info/*
+

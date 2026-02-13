@@ -1,7 +1,6 @@
 """ Classes Exposed for LaserPy_Quantum """
 
 from .Components import Clock
-from .Components import PhysicalComponent
 
 from .Components import LangevinNoise
 from .Components import (
@@ -21,6 +20,9 @@ from .QuantumOptics import Gates
 from .SpecializedComponents import ModulationFunction
 from .SpecializedComponents import CurrentDriver
 from .SpecializedComponents import Laser
+
+from .SpecializedComponents import RandomNumSource
+
 from .SpecializedComponents import VariableOpticalAttenuator
 from .SpecializedComponents import AsymmetricMachZehnderInterferometer
 
@@ -33,7 +35,6 @@ from .utils import (
 
 __all__ = [
     "Clock",
-    "PhysicalComponent",
 
     "LangevinNoise",
     "ArbitaryWave",
@@ -51,6 +52,9 @@ __all__ = [
     "ModulationFunction",
     "CurrentDriver",
     "Laser",
+
+    "RandomNumSource",
+
     "VariableOpticalAttenuator",
     "AsymmetricMachZehnderInterferometer",
 
@@ -60,6 +64,6 @@ __all__ = [
     "get_time_delay_phase_correction"
 ]
 
-__version__ = '0.0.10'
+__version__ = '0.0.11'
 __author__ = 'Anshurup Gupta'
 __description__ = 'A high-level, open-source Python library designed for the theoretical simulation of laser systems'

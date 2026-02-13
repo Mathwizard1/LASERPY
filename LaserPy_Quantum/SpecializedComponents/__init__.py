@@ -13,7 +13,9 @@ from .OpticalRegulator import VariableOpticalAttenuator
 from .PhotonDetector import SinglePhotonDetector
 #from .PhotonDetector import PhaseSensitiveSPD
 
-from .SimpleDevices import PhaseSample, Mirror
+from .RandomSource import RandomNumSource
+
+from .SimpleDevices import PhaseCell, Mirror
 from .SimpleDevices import BeamSplitter
 
 __all__ = [
@@ -30,7 +32,9 @@ __all__ = [
     "SinglePhotonDetector",
     #"PhaseSensitiveSPD",
 
-    "PhaseSample",
+    "RandomNumSource",
+
+    "PhaseCell",
     "Mirror",
     "BeamSplitter"
 ]
