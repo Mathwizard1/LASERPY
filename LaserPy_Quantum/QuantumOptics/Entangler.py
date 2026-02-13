@@ -9,6 +9,7 @@ class QuantumEntangler:
         self.photons: tuple[Photon,...] = photons
         self.quantum_state = quantum_state if(quantum_state) else QuantumStateModel(len(photons))
 
+        self._gates_data = []
         if sync: self.sync_qubits()
 
     def __repr__(self) -> str:
@@ -28,6 +29,14 @@ class QuantumEntangler:
 
         result = QuantumEntangler(photons, quantum_state)
         return result
+
+    def apply_gate(self, gate_name: str, qubits: tuple[int, ...]|None= None) -> QuantumStateModel:
+        # TODO: Save Gate circuits in proper order
+        # if(qubits is None):
+        #     pass
+        # else:
+        #     self._gates_data.append((gate_name, qubits))
+        return self.quantum_state
 
     def sync_qubits(self):
         for idx, photon in enumerate(self.photons):

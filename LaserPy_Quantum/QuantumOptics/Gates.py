@@ -16,7 +16,7 @@ class Gates:
             raise IndexError(f"{qubits!r} cannot contain duplicates.")
 
     @staticmethod
-    def _n_qubit_gate(matrix: ndarray, qubits: tuple[Photon, ...]):
+    def _n_qubit_gate(gate_name: str, matrix: ndarray, qubits: tuple[Photon, ...]):
         Gates.__qubits_check(qubits)
         
         QE = qubits[-1].qubit()
@@ -25,10 +25,11 @@ class Gates:
             if QE is not qubit.qubit(): 
                 raise AssertionError(f"{qubits[-1]!r} is not entangled with {qubit!r}.")
             qubit_idx.append(qubit.qubit_index)
-        return QE.quantum_state._n_qubit_gate(matrix, tuple(qubit_idx))
+
+        return QE.apply_gate(gate_name, tuple(qubit_idx))._n_qubit_gate(matrix, tuple(qubit_idx))
 
     @staticmethod
-    def _gate(matrix: ndarray, target: Photon, control1: Photon|None = None, control2: Photon|None = None):        
+    def _gate(gate_name: str, matrix: ndarray, target: Photon, control1: Photon|None = None, control2: Photon|None = None):        
         # Ensure the target has an entangler
         QE = target.qubit()
         
@@ -40,7 +41,8 @@ class Gates:
             elif QE is not control2.qubit(): raise AssertionError(f"{target!r} is not entangled with {control2!r}.")
 
             # Apply the 3-qubit gate
-            QE.quantum_state._triple_qubit_gate(matrix, target.qubit_index, control1.qubit_index, control2.qubit_index)
+            qubit_idx = (target.qubit_index, control1.qubit_index, control2.qubit_index)
+            QE.apply_gate(gate_name, qubit_idx)._triple_qubit_gate(matrix, *qubit_idx)
         elif control1:
             Gates.__qubits_check((control1, target))
 
@@ -48,24 +50,27 @@ class Gates:
             if QE is not control1.qubit(): raise AssertionError(f"{target!r} is not entangled with {control1!r}.") 
             
             # Apply the 2-qubit gate
-            QE.quantum_state._double_qubit_gate(matrix, target.qubit_index, control1.qubit_index)
+            qubit_idx = (target.qubit_index, control1.qubit_index)
+            QE.apply_gate(gate_name, qubit_idx)._double_qubit_gate(matrix, *qubit_idx)
         else:
             # Apply the 1-qubit gate
-            QE.quantum_state._single_qubit_gate(matrix, target.qubit_index)
+            QE.apply_gate(gate_name, (target.qubit_index,))._single_qubit_gate(matrix, target.qubit_index)
+
+############################################################################
 
     @staticmethod
     def Measure(target: Photon, shots: int = 1):
         if(shots <= 0): raise ValueError("shots cannot be less than 1.")
 
         QE = target.qubit()
-        return QE.quantum_state._measure_gate(target.qubit_index, shots)
+        return QE.apply_gate("M", (target.qubit_index,))._measure_gate(target.qubit_index, shots)
 
     @staticmethod
     def Measure_All(target: Photon, shots: int = 1):
         if(shots <= 0): raise ValueError("shots cannot be less than 1.")
 
         QE = target.qubit()
-        return QE.quantum_state._measure_all_gate(shots)
+        return QE.apply_gate("MA")._measure_all_gate(shots)
 
 ############################################################################
 
@@ -74,70 +79,70 @@ class Gates:
         """Identity gate: |Ψ> -> |Ψ>"""
         matrix = array([[1, 0], 
                         [0, 1]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("i", matrix, target)
 
     @staticmethod
     def X(target: Photon) -> None:
         """Pauli-X gate (Bit-flip): |0> -> |1> and |1> -> |0>"""
         matrix = array([[0, 1], 
                         [1, 0]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("x", matrix, target)
 
     @staticmethod
     def Y(target: Photon) -> None:
         """Pauli-Y gate: |0> -> i|1> and |1> -> -i|0>"""
         matrix = array([[0, -1j], 
                         [1j, 0]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("y", matrix, target)
 
     @staticmethod
     def Z(target: Photon) -> None:
         """Pauli-Z gate (Phase-flip): |0> -> |0> and |1> -> -|1>"""
         matrix = array([[1, 0], 
                         [0, -1]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("y", matrix, target)
 
     @staticmethod
     def Rx(target: Photon, theta: float) -> None:
         """Rotation around the X-axis."""
         matrix = array([[cos(theta/2), -1j * sin(theta/2)],
                         [-1j * sin(theta/2), cos(theta/2)]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("rx", matrix, target)
 
     @staticmethod
     def Ry(target: Photon, theta: float) -> None:
         """Rotation around the Y-axis."""
         matrix = array([[cos(theta/2), -sin(theta/2)],
                         [sin(theta/2), cos(theta/2)]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("ry", matrix, target)
 
     @staticmethod
     def Rz(target: Photon, theta: float) -> None:
         """Rotation around the Z-axis."""
         matrix = array([[exp(-1j * theta/2), 0],
                         [0, exp(1j * theta/2)]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("rz", matrix, target)
 
     @staticmethod
     def P(target: Photon, theta: float) -> None:
         """Phase shift: |1> to e^{i*theta}|1>."""
         matrix = array([[1, 0],
                         [0, exp(1j * theta)]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("p", matrix, target)
 
     @staticmethod
     def H(target: Photon) -> None:
         """Hadamard gate: |0> -> |+> and |1> -> |->"""
         matrix = array([[1,  1], 
                         [1, -1]], dtype=complex) / sqrt(2)
-        Gates._gate(matrix, target)
+        Gates._gate("h", matrix, target)
 
     @staticmethod
     def U(target: Photon, theta: float, phi: float, lmbda: float) -> None:
         """Universal Rotation gate"""
         matrix = array([[cos(theta / 2),  -exp(1j * lmbda) * sin(theta / 2)], 
                         [exp(1j * phi) * sin(theta / 2), exp(1j * (phi + lmbda)) * cos(theta / 2)]], dtype=complex)
-        Gates._gate(matrix, target)
+        Gates._gate("u", matrix, target)
 
 ############################################################################
 
@@ -150,7 +155,7 @@ class Gates:
             [0, 0, 0, 1],
             [0, 0, 1, 0]
         ], dtype=complex)
-        Gates._gate(cnot_matrix, target, control)
+        Gates._gate("cx", cnot_matrix, target, control)
 
     @staticmethod
     def CZ(target: Photon, control: Photon) -> None:
@@ -161,7 +166,7 @@ class Gates:
             [0, 0, 1, 0],
             [0, 0, 0, -1]
         ], dtype=complex)
-        Gates._gate(cz_matrix, target, control)
+        Gates._gate("cz", cz_matrix, target, control)
 
     @staticmethod
     def CPHASE(target: Photon, control: Photon, theta: float) -> None:
@@ -172,7 +177,7 @@ class Gates:
             [0, 0, 1, 0],
             [0, 0, 0, exp(1j * theta)]
         ], dtype=complex)
-        Gates._gate(cp_matrix, target, control)
+        Gates._gate("cp", cp_matrix, target, control)
 
     @staticmethod
     def SWAP(target: Photon, control: Photon) -> None:
@@ -183,7 +188,7 @@ class Gates:
             [0, 1, 0, 0],
             [0, 0, 0, 1]
         ], dtype=complex)
-        Gates._gate(swap_matrix, target, control)
+        Gates._gate("swap", swap_matrix, target, control)
 
     @staticmethod
     def CCNOT(target: Photon, control1: Photon, control2: Photon) -> None:
@@ -198,4 +203,4 @@ class Gates:
             [0, 0, 0, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, 0, 1, 0],
         ], dtype=complex)
-        Gates._gate(ccnot_matrix, target, control1, control2)
+        Gates._gate("ccnot", ccnot_matrix, target, control1, control2)
