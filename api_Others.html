@@ -8,15 +8,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Photon and Utilities &mdash; LaserPy_Quantum 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=f7cdbf68"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -103,59 +103,59 @@
 <span id="photon-tools"></span><h2>Photon tools<a class="headerlink" href="#module-LaserPy_Quantum.Photon" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Photon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field:</span> <span class="pre">complex</span> <span class="pre">=</span> <span class="pre">(1e-12+0j)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photon_number:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_phase:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photon_id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_index:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantum_entangler:</span> <span class="pre">~LaserPy_Quantum.QuantumOptics.Entangler.QuantumEntangler</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/Photon.html#Photon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Photon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">complex</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1e-12+0j)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photon_number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">photon_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qubit_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantum_entangler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuantumEntangler</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/Photon.html#Photon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Photon class.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.field">
-<span class="sig-name descname"><span class="pre">field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">complex</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.field" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">field</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">complex</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.field" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.frequency">
-<span class="sig-name descname"><span class="pre">frequency</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.frequency" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">frequency</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.frequency" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.photon_number">
-<span class="sig-name descname"><span class="pre">photon_number</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.photon_number" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">photon_number</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.photon_number" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.source_phase">
-<span class="sig-name descname"><span class="pre">source_phase</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.source_phase" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">source_phase</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.source_phase" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.photon_id">
-<span class="sig-name descname"><span class="pre">photon_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.photon_id" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">photon_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.photon_id" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.qubit_index">
-<span class="sig-name descname"><span class="pre">qubit_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.qubit_index" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">qubit_index</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.qubit_index" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.quantum_entangler">
-<span class="sig-name descname"><span class="pre">quantum_entangler</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">QuantumEntangler</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.quantum_entangler" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">quantum_entangler</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">QuantumEntangler</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.quantum_entangler" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.from_photon">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_photon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#LaserPy_Quantum.Photon.Photon" title="LaserPy_Quantum.Photon.Photon"><span class="pre">Photon</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#LaserPy_Quantum.Photon.Photon" title="LaserPy_Quantum.Photon.Photon"><span class="pre">Photon</span></a></span></span><a class="reference internal" href="_modules/LaserPy_Quantum/Photon.html#Photon.from_photon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.from_photon" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_photon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#LaserPy_Quantum.Photon.Photon" title="LaserPy_Quantum.Photon.Photon"><span class="pre">Photon</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#LaserPy_Quantum.Photon.Photon" title="LaserPy_Quantum.Photon.Photon"><span class="pre">Photon</span></a></span></span><a class="reference internal" href="_modules/LaserPy_Quantum/Photon.html#Photon.from_photon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.from_photon" title="Link to this definition"></a></dt>
 <dd><p>Photon classmethod from photon deepcopy method</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.amplitude">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">amplitude</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.amplitude" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">amplitude</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.amplitude" title="Link to this definition"></a></dt>
 <dd><p>amplitude (V/m) of the field</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="LaserPy_Quantum.Photon.Photon.phase">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phase</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.phase" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">phase</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.Photon.Photon.phase" title="Link to this definition"></a></dt>
 <dd><p>phase (rad) of the field</p>
 </dd></dl>
 

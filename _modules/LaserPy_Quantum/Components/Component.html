@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LaserPy_Quantum.Components.Component &mdash; LaserPy_Quantum 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -371,16 +371,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : str = `&quot;default_time_component&quot;`</span>
 <span class="sd">        Name of the component</span>
-<span class="sd">        </span>
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    _data: any = `0`</span>
-<span class="sd">        A container for specific data according to child classes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;default_time_component&quot;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;data for TimeComponent&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TimeComponent.simulate">
 <a class="viewcode-back" href="../../../api_Components.html#LaserPy_Quantum.Components.TimeComponent.simulate">[docs]</a>
@@ -616,41 +609,8 @@
         <span class="k">return</span> <span class="n">kwargs</span></div>
 </div>
 
-
-<div class="viewcode-block" id="PhysicalComponent">
-<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Components.PhysicalComponent">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PhysicalComponent</span><span class="p">(</span><span class="n">DataComponent</span><span class="p">,</span> <span class="n">TimeComponent</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    PhysicalComponent class</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;default_physical_component&quot;</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhysicalComponent _data value to override&quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_simulation_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;_data&#39;</span><span class="p">:[]}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_simulation_data_units</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;_data&#39;</span><span class="p">:</span><span class="sa">r</span><span class="s2">&quot; $(u)$&quot;</span><span class="p">}</span>
-
-<div class="viewcode-block" id="PhysicalComponent.simulate">
-<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Components.PhysicalComponent.simulate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="n">Clock</span><span class="p">,</span> <span class="n">_data</span><span class="p">:</span> <span class="nb">float</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhysicalComponent simulate method to override&quot;&quot;&quot;</span>
-        <span class="c1">#return super().simulate(args)</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">_data</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="mi">100</span></div>
-
-
-<div class="viewcode-block" id="PhysicalComponent.input_port">
-<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Components.PhysicalComponent.input_port">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">input_port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhysicalComponent input port method to override&quot;&quot;&quot;</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;clock&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;_data&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">kwargs</span></div>
-</div>
-
+    
+<span class="c1"># PhysicalComponent(DataComponent, TimeComponent)</span>
 </pre></div>
 
            </div>

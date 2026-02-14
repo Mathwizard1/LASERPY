@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LaserPy_Quantum.QuantumOptics.Gates &mdash; LaserPy_Quantum 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -76,7 +76,8 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">array</span><span class="p">,</span> 
+    <span class="n">array</span><span class="p">,</span>
+    <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span>
     <span class="n">sqrt</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -86,71 +87,176 @@
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Gates</span><span class="p">:</span>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">control</span><span class="p">:</span> <span class="n">Photon</span><span class="o">|</span><span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__qubits_check</span><span class="p">(</span><span class="n">qubits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Photon</span><span class="p">,</span> <span class="o">...</span><span class="p">]):</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">qubits</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">qubits</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qubits</span><span class="si">!r}</span><span class="s2"> cannot contain duplicates.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_n_qubit_gate</span><span class="p">(</span><span class="n">gate_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Photon</span><span class="p">,</span> <span class="o">...</span><span class="p">]):</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">__qubits_check</span><span class="p">(</span><span class="n">qubits</span><span class="p">)</span>
+        
+        <span class="n">QE</span> <span class="o">=</span> <span class="n">qubits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">qubit</span><span class="p">()</span>
+        <span class="n">qubit_idx</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="n">qubits</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">QE</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">qubit</span><span class="o">.</span><span class="n">qubit</span><span class="p">():</span> 
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">qubits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">!r}</span><span class="s2"> is not entangled with </span><span class="si">{</span><span class="n">qubit</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">qubit_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubit</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">QE</span><span class="o">.</span><span class="n">apply_gate</span><span class="p">(</span><span class="n">gate_name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx</span><span class="p">))</span><span class="o">.</span><span class="n">_n_qubit_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gate</span><span class="p">(</span><span class="n">gate_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">control1</span><span class="p">:</span> <span class="n">Photon</span><span class="o">|</span><span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">control2</span><span class="p">:</span> <span class="n">Photon</span><span class="o">|</span><span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>        
         <span class="c1"># Ensure the target has an entangler</span>
         <span class="n">QE</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit</span><span class="p">()</span>
         
-        <span class="k">if</span> <span class="n">control</span><span class="p">:</span>
-            <span class="c1"># Ensure the control has an entangler and are in same state</span>
-            <span class="n">QE_control</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">qubit</span><span class="p">()</span>
-            
-            <span class="k">if</span> <span class="n">QE</span> <span class="o">!=</span> <span class="n">QE_control</span><span class="p">:</span> <span class="n">QE</span> <span class="o">=</span> <span class="n">QE</span> <span class="o">+</span> <span class="n">QE_control</span> 
+        <span class="k">if</span> <span class="n">control1</span> <span class="ow">and</span> <span class="n">control2</span><span class="p">:</span>
+            <span class="n">Gates</span><span class="o">.</span><span class="n">__qubits_check</span><span class="p">((</span><span class="n">control1</span><span class="p">,</span> <span class="n">control2</span><span class="p">,</span> <span class="n">target</span><span class="p">))</span>
+
+            <span class="c1"># Ensure the control has an entangler and are in same state            </span>
+            <span class="k">if</span> <span class="n">QE</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">control1</span><span class="o">.</span><span class="n">qubit</span><span class="p">():</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="si">!r}</span><span class="s2"> is not entangled with </span><span class="si">{</span><span class="n">control1</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">QE</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">control2</span><span class="o">.</span><span class="n">qubit</span><span class="p">():</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="si">!r}</span><span class="s2"> is not entangled with </span><span class="si">{</span><span class="n">control2</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Apply the 3-qubit gate</span>
+            <span class="n">qubit_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">,</span> <span class="n">control1</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">,</span> <span class="n">control2</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">)</span>
+            <span class="n">QE</span><span class="o">.</span><span class="n">apply_gate</span><span class="p">(</span><span class="n">gate_name</span><span class="p">,</span> <span class="n">qubit_idx</span><span class="p">)</span><span class="o">.</span><span class="n">_triple_qubit_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="o">*</span><span class="n">qubit_idx</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">control1</span><span class="p">:</span>
+            <span class="n">Gates</span><span class="o">.</span><span class="n">__qubits_check</span><span class="p">((</span><span class="n">control1</span><span class="p">,</span> <span class="n">target</span><span class="p">))</span>
+
+            <span class="c1"># Ensure the control has an entangler and are in same state            </span>
+            <span class="k">if</span> <span class="n">QE</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">control1</span><span class="o">.</span><span class="n">qubit</span><span class="p">():</span> <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="si">!r}</span><span class="s2"> is not entangled with </span><span class="si">{</span><span class="n">control1</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span> 
             
             <span class="c1"># Apply the 2-qubit gate</span>
-            <span class="n">QE</span><span class="o">.</span><span class="n">quantum_state</span><span class="o">.</span><span class="n">_double_qubit_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">,</span> <span class="n">control</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">)</span>
+            <span class="n">qubit_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">,</span> <span class="n">control1</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">)</span>
+            <span class="n">QE</span><span class="o">.</span><span class="n">apply_gate</span><span class="p">(</span><span class="n">gate_name</span><span class="p">,</span> <span class="n">qubit_idx</span><span class="p">)</span><span class="o">.</span><span class="n">_double_qubit_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="o">*</span><span class="n">qubit_idx</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Apply the 1-qubit gate</span>
-            <span class="n">QE</span><span class="o">.</span><span class="n">quantum_state</span><span class="o">.</span><span class="n">_single_qubit_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">)</span>
+            <span class="n">QE</span><span class="o">.</span><span class="n">apply_gate</span><span class="p">(</span><span class="n">gate_name</span><span class="p">,</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">,))</span><span class="o">.</span><span class="n">_single_qubit_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">)</span>
+
+<span class="c1">############################################################################</span>
+
+<div class="viewcode-block" id="Gates.Measure">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.Measure">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Measure</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">shots</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;shots cannot be less than 1.&quot;</span><span class="p">)</span>
+
+        <span class="n">QE</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">QE</span><span class="o">.</span><span class="n">apply_gate</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">,))</span><span class="o">.</span><span class="n">_measure_gate</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">qubit_index</span><span class="p">,</span> <span class="n">shots</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.Measure_All">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.Measure_All">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Measure_All</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">shots</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span> <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;shots cannot be less than 1.&quot;</span><span class="p">)</span>
+
+        <span class="n">QE</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">qubit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">QE</span><span class="o">.</span><span class="n">apply_gate</span><span class="p">(</span><span class="s2">&quot;MA&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">_measure_all_gate</span><span class="p">(</span><span class="n">shots</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################################</span>
 
 <div class="viewcode-block" id="Gates.I">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.I">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">I</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="s1">&#39;Photon&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">I</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Identity gate: |Ψ&gt; -&gt; |Ψ&gt;&quot;&quot;&quot;</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Gates.X">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.X">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">X</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="s1">&#39;Photon&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">X</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pauli-X gate (Bit-flip): |0&gt; -&gt; |1&gt; and |1&gt; -&gt; |0&gt;&quot;&quot;&quot;</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> 
                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Gates.Y">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.Y">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">Y</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="s1">&#39;Photon&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Y</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pauli-Y gate: |0&gt; -&gt; i|1&gt; and |1&gt; -&gt; -i|0&gt;&quot;&quot;&quot;</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="p">],</span> 
                         <span class="p">[</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Gates.Z">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.Z">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">Z</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="s1">&#39;Photon&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Z</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pauli-Z gate (Phase-flip): |0&gt; -&gt; |0&gt; and |1&gt; -&gt; -|1&gt;&quot;&quot;&quot;</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Gates.H">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.H">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">H</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="s1">&#39;Photon&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">H</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Hadamard gate: |0&gt; -&gt; |+&gt; and |1&gt; -&gt; |-&gt;&quot;&quot;&quot;</span>
         <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span> 
                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="Gates.Rx">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.Rx">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Rx</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rotation around the X-axis.&quot;&quot;&quot;</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">)],</span>
+                        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">)]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rx[</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.Ry">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.Ry">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Ry</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rotation around the Y-axis.&quot;&quot;&quot;</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">)],</span>
+                        <span class="p">[</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">)]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ry[</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.Rz">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.Rz">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Rz</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rotation around the Z-axis.&quot;&quot;&quot;</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="o">/</span><span class="mi">2</span><span class="p">)]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rz[</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.P">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.P">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">P</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Phase shift: |1&gt; to e^{i*theta}|1&gt;.&quot;&quot;&quot;</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;p[</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.U">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.U">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">U</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Universal Rotation gate&quot;&quot;&quot;</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>  <span class="o">-</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">lmbda</span><span class="p">)</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)],</span> 
+                        <span class="p">[</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">phi</span> <span class="o">+</span> <span class="n">lmbda</span><span class="p">))</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;u[</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">phi</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">lmbda</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################################</span>
 
 <div class="viewcode-block" id="Gates.CNOT">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.CNOT">[docs]</a>
@@ -163,7 +269,67 @@
             <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
             <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="n">cnot_matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">control</span><span class="p">)</span></div>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cx&quot;</span><span class="p">,</span> <span class="n">cnot_matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">control</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.CZ">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.CZ">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">CZ</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">control</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;CZ gate: |11&gt; -&gt; -|11&gt;&quot;&quot;&quot;</span>
+        <span class="n">cz_matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cz&quot;</span><span class="p">,</span> <span class="n">cz_matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">control</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.SWAP">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.SWAP">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SWAP</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">control</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Swap gate: |i...j&gt; -&gt; |j...i&gt;&quot;&quot;&quot;</span>
+        <span class="n">swap_matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;swap&quot;</span><span class="p">,</span> <span class="n">swap_matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">control</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.CPHASE">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.CPHASE">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">CPHASE</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">control</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Controlled Phase Shift gate: |11&gt; -&gt; e^{i*theta}|11&gt;&quot;&quot;&quot;</span>
+        <span class="n">cp_matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)]</span>
+        <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cp[</span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">cp_matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">control</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Gates.CCNOT">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.Gates.CCNOT">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">CCNOT</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">control1</span><span class="p">:</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">control2</span><span class="p">:</span> <span class="n">Photon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;CCNOT gate&quot;&quot;&quot;</span>
+        <span class="n">ccnot_matrix</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Gates</span><span class="o">.</span><span class="n">_gate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ccnot&quot;</span><span class="p">,</span> <span class="n">ccnot_matrix</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">control1</span><span class="p">,</span> <span class="n">control2</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

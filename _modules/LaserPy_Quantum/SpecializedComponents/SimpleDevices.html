@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LaserPy_Quantum.SpecializedComponents.SimpleDevices &mdash; LaserPy_Quantum 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -72,7 +72,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for LaserPy_Quantum.SpecializedComponents.SimpleDevices</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">mod</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span>
     <span class="n">pi</span>
 <span class="p">)</span>
@@ -81,70 +83,55 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..Photon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">Empty_Photon</span>
 
-<div class="viewcode-block" id="PhaseSample">
-<a class="viewcode-back" href="../../../api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.PhaseSample">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PhaseSample</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PhaseCell</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    PhaseSample class</span>
+<span class="sd">    PhaseCell class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default_phase_sample&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default_phase_cell&quot;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_phase_interval</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;phase interval for PhaseSample&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;phase interval for PhaseCell&quot;&quot;&quot;</span>
 
         <span class="n">phase_delay</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">phase_delay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_interval</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_phase_change</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase_delay</span><span class="p">)</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;phase change for PhaseSample&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;phase change for PhaseCell&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span><span class="p">:</span> <span class="n">Photon</span> <span class="o">=</span> <span class="n">Empty_Photon</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;photon data for PhaseSample&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;photon data for PhaseCell&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PhaseSample.set">
-<a class="viewcode-back" href="../../../api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.PhaseSample.set">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_delay</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phase_interval</span><span class="p">:</span> <span class="nb">float</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseSample set method&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseCell set method&quot;&quot;&quot;</span>
         <span class="c1">#return super().set()</span>
         <span class="k">if</span><span class="p">(</span><span class="n">phase_interval</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_phase_interval</span> <span class="o">=</span> <span class="n">phase_interval</span>
         <span class="n">phase_delay</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">phase_delay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_interval</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_phase_change</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase_delay</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase_change</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase_delay</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="PhaseSample.simulate">
-<a class="viewcode-back" href="../../../api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.PhaseSample.simulate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photon</span><span class="p">:</span> <span class="n">Photon</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseSample simulate method&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseCell simulate method&quot;&quot;&quot;</span>
         <span class="c1">#return super().simulate(args)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span> <span class="o">=</span> <span class="n">Photon</span><span class="o">.</span><span class="n">from_photon</span><span class="p">(</span><span class="n">photon</span><span class="p">)</span>
 
         <span class="c1"># Add phase change</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span><span class="o">.</span><span class="n">field</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase_change</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span>
 
-
-<div class="viewcode-block" id="PhaseSample.input_port">
-<a class="viewcode-back" href="../../../api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.PhaseSample.input_port">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseSample input port method&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseCell input port method&quot;&quot;&quot;</span>
         <span class="c1">#return super().input_port()</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;photon&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">kwargs</span></div>
-
+        <span class="k">return</span> <span class="n">kwargs</span>
     
-<div class="viewcode-block" id="PhaseSample.output_port">
-<a class="viewcode-back" href="../../../api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.PhaseSample.output_port">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">output_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseSample output port method&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;PhaseCell output port method&quot;&quot;&quot;</span>
         <span class="c1">#return super().output_port(kwargs)</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;photon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span>
-        <span class="k">return</span> <span class="n">kwargs</span></div>
-</div>
-
+        <span class="k">return</span> <span class="n">kwargs</span>
     
 <div class="viewcode-block" id="Mirror">
 <a class="viewcode-back" href="../../../api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Mirror">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Mirror</span><span class="p">(</span><span class="n">PhaseSample</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mirror</span><span class="p">(</span><span class="n">PhaseCell</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mirror class</span>
 <span class="sd">    &quot;&quot;&quot;</span>

@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LaserPy_Quantum.SpecializedComponents.Laser &mdash; LaserPy_Quantum 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -80,7 +80,7 @@
 <span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..Components.Component</span><span class="w"> </span><span class="kn">import</span> <span class="n">Clock</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..Components.Component</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhysicalComponent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Components.Component</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataComponent</span><span class="p">,</span> <span class="n">TimeComponent</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..Components.Signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoNoise</span>
 
@@ -93,7 +93,7 @@
 
 <div class="viewcode-block" id="Laser">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.SpecializedComponents.Laser">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Laser</span><span class="p">(</span><span class="n">PhysicalComponent</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Laser</span><span class="p">(</span><span class="n">DataComponent</span><span class="p">,</span> <span class="n">TimeComponent</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Laser class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -141,7 +141,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_free_running_freq</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">UniversalConstants</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="n">laser_wavelength</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;free running frequency data for Laser&quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="n">Photon</span> <span class="o">=</span> <span class="n">Photon</span><span class="p">(</span><span class="n">ERR_TOLERANCE</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_free_running_freq</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_photon_data</span><span class="p">:</span> <span class="n">Photon</span> <span class="o">=</span> <span class="n">Photon</span><span class="p">(</span><span class="n">ERR_TOLERANCE</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_free_running_freq</span><span class="p">)</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Photon class data for Laser&quot;&quot;&quot;</span>
 
         <span class="c1"># Noise classes for simulations</span>
@@ -191,7 +191,7 @@
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.SpecializedComponents.Laser.simulate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clock</span><span class="p">:</span> <span class="n">Clock</span><span class="p">,</span> <span class="n">current</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">photon</span><span class="p">:</span> <span class="n">Photon</span><span class="o">|</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Photon</span><span class="p">,</span><span class="o">...</span><span class="p">]</span><span class="o">|</span><span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Laser simulate method&quot;&quot;&quot;</span>
-        <span class="c1">#return super().simulate(clock, _data)</span>
+        <span class="c1">#return super().simulate(clock)</span>
 
         <span class="c1"># Save current in its variable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">current</span>
@@ -225,9 +225,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">photon_number</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">photon_number</span><span class="p">,</span> <span class="n">ERR_TOLERANCE</span><span class="p">)</span>
 
         <span class="c1"># Optical field</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_power</span><span class="p">())</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">photon_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photon_number</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">source_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_photon_data</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_power</span><span class="p">())</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_photon_data</span><span class="o">.</span><span class="n">photon_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photon_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_photon_data</span><span class="o">.</span><span class="n">source_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span></div>
 
 
 <div class="viewcode-block" id="Laser.input_port">
@@ -245,7 +245,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Laser output port method&quot;&quot;&quot;</span> 
         <span class="c1">#return super().output_port(kwargs)</span>
         <span class="k">if</span><span class="p">(</span><span class="s1">&#39;photon&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;photon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;photon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_photon_data</span>
         <span class="k">return</span> <span class="n">kwargs</span></div>
 </div>
 

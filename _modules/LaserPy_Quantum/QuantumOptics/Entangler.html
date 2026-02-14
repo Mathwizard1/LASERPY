@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LaserPy_Quantum.QuantumOptics.Entangler &mdash; LaserPy_Quantum 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -76,19 +76,22 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.QuantumState</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantumState</span>
 
+<span class="n">QuantumStateModel</span> <span class="o">=</span> <span class="n">QuantumState</span>
+
 <div class="viewcode-block" id="QuantumEntangler">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.QuantumEntangler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">QuantumEntangler</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photons</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Photon</span><span class="p">,</span><span class="o">...</span><span class="p">],</span> <span class="n">quantum_state</span><span class="p">:</span> <span class="n">QuantumState</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photons</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Photon</span><span class="p">,</span><span class="o">...</span><span class="p">],</span> <span class="n">quantum_state</span><span class="p">:</span> <span class="n">QuantumStateModel</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">photons</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Photon</span><span class="p">,</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">photons</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">quantum_state</span> <span class="o">=</span> <span class="n">quantum_state</span> <span class="k">if</span><span class="p">(</span><span class="n">quantum_state</span><span class="p">)</span> <span class="k">else</span> <span class="n">QuantumState</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">photons</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantum_state</span> <span class="o">=</span> <span class="n">quantum_state</span> <span class="k">if</span><span class="p">(</span><span class="n">quantum_state</span><span class="p">)</span> <span class="k">else</span> <span class="n">QuantumStateModel</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">photons</span><span class="p">))</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gates_data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">sync</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_qubits</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;QuantumEntangler:</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">photon</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">photons</span><span class="p">:</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;photon:</span><span class="si">{</span><span class="n">photon</span><span class="o">.</span><span class="n">photon_id</span><span class="si">}</span><span class="s2"> qubit:</span><span class="si">{</span><span class="n">photon</span><span class="o">.</span><span class="n">qubit_index</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">photon</span><span class="si">!r}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantum_state</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">string</span>
     
@@ -102,6 +105,17 @@
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">QuantumEntangler</span><span class="p">(</span><span class="n">photons</span><span class="p">,</span> <span class="n">quantum_state</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="QuantumEntangler.apply_gate">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.QuantumEntangler.apply_gate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_gate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gate_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantumStateModel</span><span class="p">:</span>
+        <span class="c1"># TODO: Save Gate circuits in proper order</span>
+        <span class="c1"># if(qubits is None):</span>
+        <span class="c1">#     pass</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     self._gates_data.append((gate_name, qubits))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum_state</span></div>
+
 
 <div class="viewcode-block" id="QuantumEntangler.sync_qubits">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.QuantumEntangler.sync_qubits">[docs]</a>
