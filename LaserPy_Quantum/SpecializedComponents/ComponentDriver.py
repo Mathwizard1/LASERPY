@@ -29,7 +29,7 @@ class CurrentDriver(TimeComponent):
     def __init__(self, AWG:ArbitaryWaveGenerator, name:str="default_current_driver"):
         super().__init__(name)
 
-        self._data: float = 0.0
+        self._current: float = 0.0
         """current data for CurrentDriver"""
 
         self._AWG = AWG
@@ -85,13 +85,12 @@ class CurrentDriver(TimeComponent):
         #return super().simulate(clock)
         if(self._modulation_function and self._modulation_function(clock.t)):
             # Modulation function is set and Modulation_ON
-            self._data = self._AWG.simulate(clock, self._modulation_ON)
-            return self._data
-        self._data = self._AWG.simulate(clock, self._modulation_OFF)
-        return self._data
+            self._current = self._AWG.simulate(clock, self._modulation_ON)
+        else:
+            self._current = self._AWG.simulate(clock, self._modulation_OFF)
 
     def output_port(self, kwargs: dict = {}):
         """CurrentDriver output port method"""
         #return super().output_port(kwargs)
-        kwargs['current'] = self._data
+        kwargs['current'] = self._current
         return kwargs

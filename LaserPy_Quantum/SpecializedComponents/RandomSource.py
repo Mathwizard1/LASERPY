@@ -20,7 +20,6 @@ class RandomNumSource(TimeComponent):
             self.num = self._source_module(clock)
         else:
             self.num = int(RND_GEN.integers(0, self._num_range))
-        return self.num
 
     def output_port(self, kwargs: dict = {}):
         #return super().output_port(kwargs)
