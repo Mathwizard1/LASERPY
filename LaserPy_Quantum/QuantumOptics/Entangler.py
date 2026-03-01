@@ -31,11 +31,6 @@ class QuantumEntangler:
         return result
 
     def apply_gate(self, gate_name: str, qubits: tuple[int, ...]|None= None) -> QuantumStateModel:
-        # TODO: Save Gate circuits in proper order
-        # if(qubits is None):
-        #     pass
-        # else:
-        #     self._gates_data.append((gate_name, qubits))
         return self.quantum_state
 
     def sync_qubits(self):

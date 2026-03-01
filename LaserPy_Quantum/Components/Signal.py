@@ -9,14 +9,19 @@ from .Component import Clock
 
 from ..Constants import ERR_TOLERANCE
 
-from uuid import uuid4
+from itertools import count
+
+_Signal_counter = count()
+def _next_signal_id():
+    """Global Monotonic Signal counter as uid"""
+    return next(_Signal_counter)
 
 ########################################################
 
 class SignalID:
     def __init__(self, name:str) -> None:
         self.name = name
-        self.uid = uuid4()
+        self.uid = _next_signal_id()
 
     def __repr__(self) -> str:
         """SignalID __repr__ method"""

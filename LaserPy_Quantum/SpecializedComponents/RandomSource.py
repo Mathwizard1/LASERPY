@@ -25,7 +25,3 @@ class RandomNumSource(TimeComponent):
         #return super().output_port(kwargs)
         kwargs['num'] = self.num
         return kwargs
-    
-class RandomBitSource(RandomNumSource):
-    def __init__(self, name: str = "default_random_bit_source"):
-        super().__init__(None, 2, name)

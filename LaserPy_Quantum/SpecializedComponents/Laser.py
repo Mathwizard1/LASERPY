@@ -154,6 +154,5 @@ class Laser(DataComponent, TimeComponent):
     def output_port(self, kwargs: dict = {}):
         """Laser output port method""" 
         #return super().output_port(kwargs)
-        if('photon' in kwargs):
-            kwargs['photon'] = self._photon_data
+        kwargs['photon'] = self._photon_data
         return kwargs

@@ -14,13 +14,12 @@ class ModulationFunction(ArbitaryWave):
         super().__init__(name, t_unit)
         self.idx = 0
         self.modulation_bits = modulation_bits
-        self.modulation_bit = 1
         self.dt = dt
 
     def WaveSignal(self, t):
         if(t <= self.dt):
             self.idx = (self.idx + 1) % len(self.modulation_bits)
-        return self.modulation_bits[self.idx] == self.modulation_bit
+        return self.modulation_bits[self.idx]
 
 class CurrentDriver(TimeComponent):
     """ 
