@@ -65,7 +65,7 @@ class Laser(DataComponent, TimeComponent):
         self._free_running_freq = 2 * pi * UniversalConstants.C.value / laser_wavelength
         """free running frequency data for Laser"""
 
-        self._photon_data: Photon = Photon(ERR_TOLERANCE + 0j, self._free_running_freq)
+        self.photon: Photon = Photon(ERR_TOLERANCE + 0j, self._free_running_freq)
         """Photon class data for Laser"""
 
         # Noise classes for simulations
@@ -141,9 +141,9 @@ class Laser(DataComponent, TimeComponent):
         self.photon_number = max(self.photon_number, ERR_TOLERANCE)
 
         # Optical field
-        self._photon_data.field = sqrt(self._power()) * exp(1j * self.phase)
-        self._photon_data.photon_number = self.photon_number
-        self._photon_data.source_phase = self.phase
+        self.photon.field = sqrt(self._power()) * exp(1j * self.phase)
+        self.photon.photon_number = self.photon_number
+        self.photon.source_phase = self.phase
 
     def input_port(self):
         """Laser input port method""" 
@@ -151,8 +151,11 @@ class Laser(DataComponent, TimeComponent):
         kwargs = {'clock':None, 'current':None, 'photon':None}
         return kwargs
     
-    def output_port(self, kwargs: dict = {}):
-        """Laser output port method""" 
-        #return super().output_port(kwargs)
-        kwargs['photon'] = self._photon_data
-        return kwargs
+    def get_linewidth(self):
+        Rsp = self._Beta * self.carrier / self._TAU_N
+        delta_nu = self._Gamma_cap * Rsp * (1 + self._Alpha ** 2) / (4 * pi * self.photon_number)
+        return delta_nu
+
+    def get_pump_bandwidth(self):
+        sigma_omega_p = 2 * pi * self.get_linewidth()
+        return sigma_omega_p

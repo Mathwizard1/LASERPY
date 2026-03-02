@@ -15,7 +15,7 @@ from .SimpleDevices import BeamSplitter
 
 from ..Photon import Photon, Empty_Photon, Photon_dtype
 
-from ..utils.HelperPlots import display_class_instances_data
+from ..utils.HelperFunctions import display_class_instances_data
 
 class AsymmetricMachZehnderInterferometer(Component):
     """

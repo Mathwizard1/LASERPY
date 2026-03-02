@@ -142,21 +142,3 @@ class QuantumState:
             bitstring = format(k, f'0{self.n_qubits}b')
             counts[bitstring] += 1
         return dict(counts)
-
-# class FullStateVector(QuantumState):
-#     def __init__(self, n: int = 1, state: ndarray|None = None) -> None:
-#         state = state if(state) else array([1.0 + 0j] + [0.0 + 0j] * ((1 << n) - 1), dtype=complex)
-
-#         super().__init__(n, state)
-
-#     def __add__(self, other: QuantumState) -> QuantumState:
-#         merged_n = self.n_qubits + other.n_qubits
-#         merged_state = kron(self._state, other._state)
-#         result = QuantumState(merged_n, merged_state)
-#         return result
-
-#     def _single_qubit_gate(self, matrix: ndarray, target: int):
-#         pass
-
-#     def _double_qubit_gate(self, matrix: ndarray, control: int, target: int):
-#         pass
