@@ -29,6 +29,10 @@ from .SpecializedComponents import AsymmetricMachZehnderInterferometer
 from .Photon import Photon
 
 from .utils import (
+    SellmeierFormula,
+    Isotropic,
+    Birefringent,
+
     display_class_instances_data,
     get_time_delay_phase_correction
 )
@@ -59,6 +63,10 @@ __all__ = [
     "AsymmetricMachZehnderInterferometer",
 
     "Photon",
+
+    "SellmeierFormula",
+    "Isotropic",
+    "Birefringent",
 
     "display_class_instances_data",
     "get_time_delay_phase_correction"

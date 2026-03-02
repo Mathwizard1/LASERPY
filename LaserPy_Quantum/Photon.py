@@ -4,12 +4,13 @@ from dataclasses import dataclass, field as datafield
 
 from numpy import (
     dtype, object_,
-    angle, abs
+    angle, abs,
+    pi
 )
 
 from itertools import count
 
-from .Constants import ERR_TOLERANCE
+from .Constants import UniversalConstants, ERR_TOLERANCE
 
 _Photon_counter = count()
 def _next_photon_id():
@@ -85,6 +86,11 @@ class Photon:
     def phase(self) -> float:
         """phase (rad) of the field"""
         return float(angle(self.field))
+
+    @property
+    def wavelength(self) -> float:
+        """wavelength (m) of the photon"""
+        return 2 * pi * UniversalConstants.C.value / self.frequency
 
     def qubit(self):        
         QE = self.quantum_entangler
