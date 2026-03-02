@@ -1,26 +1,35 @@
-from LaserPy_Quantum import Clock, PhysicalComponent
-from LaserPy_Quantum import Connection, Simulator
+from LaserPy_Quantum.SpecializedComponents.PhotonPairGenerator import PhotonPairGeneratorCrystal
+from LaserPy_Quantum.utils.RefractiveMaterials import Birefringent, SellmeierFormula
+from LaserPy_Quantum.Photon import Photon
 
-from LaserPy_Quantum import display_class_instances_data
+from LaserPy_Quantum.Constants import UniversalConstants
+from numpy import pi
 
-simulator_clock = Clock(dt=0.01)
-simulator_clock.set(2)
+# deff = 2.2e-12
+# Crystal_length = 2e-3
 
-simulator = Simulator(simulator_clock)
 
-physical_device1 = PhysicalComponent()
-physical_device2 = PhysicalComponent()
+BBO = Birefringent(
+    SellmeierFormula((2.7359,0.01878,0.01822,0.01354)),
+    SellmeierFormula((2.3753,0.01224,0.01667,0.01516)),
+    name="BBO"
+)
 
-simulator.set((
-    Connection(simulator_clock, physical_device1),
-    Connection(physical_device1, physical_device2)
-))
+SPDC = PhotonPairGeneratorCrystal(
+    refractive_material= BBO,
+    SPDC_type= 'II',
+)
 
-simulator.reset(True)
-simulator.simulate()
-time_data = simulator.get_data()
+#print(BBO.n(810e-9, 'H'))
+#exit()
 
-physical_device1.display_data(time_data)
-physical_device2.display_data(time_data)
+############################################################################
 
-display_class_instances_data((physical_device1, physical_device2), time_data)
+pump = Photon(
+    frequency = 2 * pi * UniversalConstants.C.value/ 405e-9,
+    field = 3e4 + 0j,
+    photon_number = 1e5
+)
+
+SPDC.simulate(pump)
+

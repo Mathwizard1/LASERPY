@@ -17,5 +17,8 @@
     "Gamma_cap": 0.27,
     "Kappa": 1.13e+11,
 
+    "deff": 2.2e-12,
+    "Crystal_length": 2.0e-3,
+
     "~":0
 }

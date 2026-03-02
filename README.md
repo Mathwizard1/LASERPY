@@ -1,6 +1,6 @@
 # LaserPy_Quantum
 
-![LaserPy_Quantum](./LaserPy_Quantum/LaserPy_Quantum.png)
+![LaserPy_Quantum](https://raw.githubusercontent.com/Mathwizard1/LaserPy_Quantum/refs/heads/main/LaserPy_Quantum/LaserPy_Quantum.png)
 
 **LaserPy_Quantum** provides an intuitive interface for simulating complex laser interactions, current drivers, and interferometer setups, with plans to offload performance-critical components to Rust for high-speed numerical computations. A *high-level, open-source Python library designed for the theoretical simulation of laser systems* in quantum communication and cryptographic protocols.
 
@@ -38,32 +38,46 @@ Ensure you’re using Python 3.9+.
 Below is an example of using LaserPy_Quantum component and connection system with simulator:
 
 ```python
-from LaserPy_Quantum import Clock, PhysicalComponent
+############################################################################
+from LaserPy_Quantum import Clock
 from LaserPy_Quantum import Connection, Simulator
+from LaserPy_Quantum import StaticWave, ArbitaryWaveGenerator
+from LaserPy_Quantum import CurrentDriver
+from LaserPy_Quantum import Laser
 
-from LaserPy_Quantum import display_class_instances_data
+############################################################################
+dt = 1e-12
+t_unit = 1e-9
+t_final = 100 * t_unit
+#sampling_rate = 2 * dt
 
-simulator_clock = Clock(dt=0.01)
-simulator_clock.set(2)
+# Current Constants
+I_th = 0.0178
+MASTER_BASE_DC = 1.4 * I_th
+
+mBase = StaticWave("mBase", MASTER_BASE_DC)
+
+AWG = ArbitaryWaveGenerator()
+AWG.set(mBase)
+
+############################################################################
+
+current_driver1 = CurrentDriver(AWG)
+current_driver1.set(mBase)
+
+master_laser = Laser(name= "master_laser")
+
+simulator_clock = Clock(dt)
+simulator_clock.set(t_final)
 
 simulator = Simulator(simulator_clock)
 
-physical_device1 = PhysicalComponent()
-physical_device2 = PhysicalComponent()
-
 simulator.set((
-    Connection(simulator_clock, physical_device1),
-    Connection(physical_device1, physical_device2)
+    Connection(simulator_clock, current_driver1),
+    Connection(current_driver1, master_laser),
 ))
 
 simulator.reset(True)
-simulator.simulate()
-time_data = simulator.get_data()
-
-physical_device1.display_data(time_data)
-physical_device2.display_data(time_data)
-
-display_class_instances_data((physical_device1, physical_device2), time_data)
 ```
 
 ### 🧠 Use Case: Laser simulations
@@ -78,16 +92,14 @@ It allows researchers and engineers to prototype and test theoretical setups bef
 
 #### TODO list
 
-0) convert information passing from dictionary to namedtuples
 1) global config singleton
 
-2) Quantum gates
+2) Quantum gates (WIP)
 
 1) Rust based critical parts off-loading
 2) Component behaviour refinement
 3) More components
-> - TODO Optical Circulator
-> - TODO multiport interferometer
+
 4) GUI
 
 ### 🤝 Contributing

@@ -9,7 +9,6 @@ class QuantumEntangler:
         self.photons: tuple[Photon,...] = photons
         self.quantum_state = quantum_state if(quantum_state) else QuantumStateModel(len(photons))
 
-        self._gates_data = []
         if sync: self.sync_qubits()
 
     def __repr__(self) -> str:

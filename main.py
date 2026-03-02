@@ -67,15 +67,17 @@ simulator_clock.set(t_final)
 
 simulator = Simulator(simulator_clock)
 
-VOA = VariableOpticalAttenuator(5)
+VOA1 = VariableOpticalAttenuator(12)
+VOA2 = VariableOpticalAttenuator(12)
 AMZI = AsymmetricMachZehnderInterferometer(simulator_clock, time_delay= t_unit)
 
 simulator.set((
     Connection(simulator_clock, (current_driver1, current_driver2)),
     Connection(current_driver1, master_laser),
-    Connection(master_laser, VOA),
-    Connection((current_driver2, VOA), slave_laser),
-    Connection(slave_laser, AMZI)
+    Connection(master_laser, VOA1),
+    Connection((current_driver2, VOA1), slave_laser),
+    Connection(slave_laser, VOA2),
+    Connection(VOA2, AMZI)
 ))
 
 simulator.reset(True)
