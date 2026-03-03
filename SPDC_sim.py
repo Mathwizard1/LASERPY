@@ -14,6 +14,14 @@ from LaserPy_Quantum.utils.RefractiveMaterials import Birefringent, SellmeierFor
 
 from numpy import pi
 
+############################################################################
+# Switch Laser Type
+
+from LaserPy_Quantum.Constants import LaserPyConstants
+LaserPyConstants.load_from_json("SPDC_Constants.json")
+
+############################################################################
+
 # Control Constants (all in SI units)
 dt = 1e-12
 t_unit = 1e-9
@@ -21,7 +29,7 @@ sampling_rate = 2
 
 # Current Constants
 I_th = 0.0178
-MASTER_BASE_DC = 1.4 * I_th # 25 mA
+MASTER_BASE_DC = 5 * I_th
 
 # Steady above lasing current
 mBase = StaticWave("mBase", MASTER_BASE_DC)
@@ -34,6 +42,7 @@ AWG.set(mBase)
 BBO = Birefringent(
     SellmeierFormula((2.7359,0.01878,0.01822,0.01354)),
     SellmeierFormula((2.3753,0.01224,0.01667,0.01516)),
+    crystal_angle= 0.86,
     name="BBO"
 )
 
@@ -58,7 +67,7 @@ SPDC = PhotonPairGeneratorCrystal(
 current_driver = CurrentDriver(AWG)
 current_driver.set(mBase)
 
-laser = Laser(laser_wavelength= 405e-9, name= "pump_laser")
+laser = Laser(name= "pump_laser")
 SPD = SinglePhotonDetector()
 
 simulator_clock = Clock(dt, sampling_rate)
@@ -77,17 +86,16 @@ simulator.reset(True)
 simulator.simulate()
 time_data = simulator.get_data()
 
-#laser.display_data(time_data)
-SPD.display_data(time_data)
+laser.display_data(time_data)
+#SPD.display_data(time_data)
 ############################################################################
 simulator.reset_data()
 
-simulator_clock.set(t_unit * 10, t= 0.0)
+simulator_clock.set(t_unit * 10)
 
 simulator.set((
     Connection(simulator_clock, current_driver),
     Connection(current_driver, laser),
-    Connection(laser, SPD),
     Connection(laser, SPDC),
 ))
 
