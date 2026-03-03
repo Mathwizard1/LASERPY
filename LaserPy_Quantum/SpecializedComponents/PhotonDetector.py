@@ -16,12 +16,13 @@ class SinglePhotonDetector(DataComponent):
     """
     SinglePhotonDetector class
     """
-
-    # Class variables for SinglePhotonDetector
-    _Eta = LaserPyConstants.get("Eta")
+    def _setup(self):
+        # SinglePhotonDetector Specific Constants
+        self._Eta = LaserPyConstants.get("Eta")
 
     def __init__(self, name: str = "default_single_photon_detector"):
         super().__init__(name)
+        self._setup()
 
         self.intensity = 0
         """intensity data for SinglePhotonDetector"""

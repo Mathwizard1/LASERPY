@@ -30,10 +30,17 @@ class ParametricTriple:
     idler: POLARIZATION_AXIS
 
 class PhotonPairGeneratorCrystal(DataComponent):
-    _deff = LaserPyConstants.get('deff')
+    """
+    PhotonPairGeneratorCrystal class
+    """
+    def _setup(self):
+        # PhotonPairGeneratorCrystal Specific Constants
+        self._deff = LaserPyConstants.get('deff')
 
     def __init__(self, refractive_material: RefractiveMaterial, SPDC_type: SPDC_TYPE= 'II', length: float|None = None, poling_period: float|None = None, name: str = "default_photon_pair_generator_crystal"):
         super().__init__(name)
+        self._setup()
+
         self.omega_s = ERR_TOLERANCE
         self.omega_i = ERR_TOLERANCE
 
@@ -128,17 +135,21 @@ class PhotonPairGeneratorCrystal(DataComponent):
         # np.sinc(x) = sin(pi * x) / (pi * x)
         phase_term = sinc(self.delta_K * self._length / (2 * pi)) ** 2
 
-        gain = (self._deff * photon.frequency * photon.amplitude * self._length / (np * ns * ni * UniversalConstants.C.value)) ** 2
+        gain = (self._deff * photon.frequency * photon.amplitude * self._length / (np * ns * ni * UniversalConstants.EPSILON_0.value *UniversalConstants.C.value)) ** 2
         self.pair_rate = gain * phase_term
 
         # Actual Pair generation
-        N_pairs = RND_GEN.poisson(self.pair_rate * photon.photon_number)
-        if (N_pairs < 1):
-            self.omega_s = ERR_TOLERANCE
-            self.omega_i = ERR_TOLERANCE
-            self.signal = Photon.from_photon(Empty_Photon)
-            self.idler = Photon.from_photon(Empty_Photon)
-            return
+        try:
+            N_pairs = RND_GEN.poisson(self.pair_rate * photon.photon_number)
+            if (N_pairs < 1):
+                self.omega_s = ERR_TOLERANCE
+                self.omega_i = ERR_TOLERANCE
+                self.signal = Photon.from_photon(Empty_Photon)
+                self.idler = Photon.from_photon(Empty_Photon)
+                return
+        except Exception as e:
+            print(f"SPDC Poisson:{self.pair_rate * photon.photon_number} Additional:{e}")
+            exit()
 
         # Other Photon data
         signal_photon.photon_number = N_pairs

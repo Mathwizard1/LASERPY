@@ -21,28 +21,30 @@ class Laser(DataComponent, TimeComponent):
     """
     Laser class
     """
+    def _setup(self):
+        # Laser Specific Constants
+        self._TAU_N = LaserPyConstants.get('Tau_N')
+        self._TAU_P = LaserPyConstants.get('Tau_P')
 
-    # Class variables for Laser
-    _TAU_N = LaserPyConstants.get('Tau_N')
-    _TAU_P = LaserPyConstants.get('Tau_P')
+        self._g = LaserPyConstants.get('g')
+        self._Epsilon = LaserPyConstants.get('Epsilon')
 
-    _g = LaserPyConstants.get('g')
-    _Epsilon = LaserPyConstants.get('Epsilon')
-  
-    _N_transparent = LaserPyConstants.get('N_transparent')
+        self._N_transparent = LaserPyConstants.get('N_transparent')
 
-    _Beta = LaserPyConstants.get('Beta')
-    _Alpha = LaserPyConstants.get('Alpha')
-    _Eta = LaserPyConstants.get('Eta')
+        self._Beta = LaserPyConstants.get('Beta')
+        self._Alpha = LaserPyConstants.get('Alpha')
+        self._Eta = LaserPyConstants.get('Eta')
 
-    _Laser_Vol = LaserPyConstants.get('Laser_Vol')
-    _Laser_Beam_Area = LaserPyConstants.get('Laser_Beam_Area')
+        self._Laser_Vol = LaserPyConstants.get('Laser_Vol')
+        self._Laser_Beam_Area = LaserPyConstants.get('Laser_Beam_Area')
 
-    _Gamma_cap = LaserPyConstants.get('Gamma_cap')
-    _Kappa = LaserPyConstants.get('Kappa')
+        self._Gamma_cap = LaserPyConstants.get('Gamma_cap')
+        self._Kappa = LaserPyConstants.get('Kappa')
 
     def __init__(self, laser_wavelength:float|None = None, name: str = "default_laser"):
         super().__init__(name)
+        self._setup()
+
         self.photon_density: float = ERR_TOLERANCE
         """photon number data for Laser"""
 
