@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-from importlib import resources
+from pathlib import Path
 import json
 
 from numpy.random import (
@@ -50,13 +50,22 @@ class LaserPyConstants:
 
     @classmethod
     def load_from_json(cls, filepath=r'Constants.json'):
-        """Loads constants from a JSON file."""
-        try:
-            with resources.open_text("LaserPy_Quantum", filepath) as f:
+        # Check the Local Directory (Project root/Running folder)
+        local_file = Path.cwd() / filepath
+        
+        # Check the Library Internal Directory
+        internal_file = Path(__file__).parent / filepath
+
+        # Search Priority logic
+        target_path = None
+        if local_file.exists(): target_path = local_file
+        elif internal_file.exists(): target_path = internal_file
+
+        if target_path:
+            with target_path.open('r') as f:
                 cls._Constants = json.load(f)
-        except FileNotFoundError:
-            print(f"Error: The file '{filepath}' was not found.")
-            exit()
+        else:
+            raise FileNotFoundError(f"Warning: {filepath} not found in {Path.cwd()} or {Path(__file__).parent}")
 
     @classmethod
     def get(cls, key, default=1.0):

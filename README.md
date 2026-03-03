@@ -92,6 +92,7 @@ It allows researchers and engineers to prototype and test theoretical setups bef
 
 #### TODO list
 
+0) Do a _setup method specific to loading constants
 1) global config singleton
 
 2) Quantum gates (WIP)

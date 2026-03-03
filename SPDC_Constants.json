@@ -1,0 +1,25 @@
+{
+    "Tau_N": 1.0e-9,
+    "Tau_P": 1.5e-12,
+
+    "g": 5.0e-13,
+    "Epsilon": 5.0e-23,
+
+    "N_transparent": 1.5e24,
+
+    "Beta": 1.0e-5,
+    "Alpha": 3.5,
+    "Eta": 0.3,
+
+    "Laser_Vol": 5.0e-18,
+    "Laser_Beam_Area": 4.0e-12,
+    "Laser_wavelength": 405.0e-9,
+
+    "Gamma_cap": 0.3,
+    "Kappa": 5.0e10,
+
+    "deff": 2.0e-12,
+    "Crystal_length": 2.0e-3,
+
+    "~":0
+}
