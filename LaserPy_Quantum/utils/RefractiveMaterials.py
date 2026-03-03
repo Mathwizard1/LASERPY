@@ -78,7 +78,7 @@ class Birefringent(RefractiveMaterial):
         elif(material_axis == 'V'):
             no = self._ordinary._func(wavelength)
             ne = self._extraordinary._func(wavelength)
-            neff = (ne * no) / ((no * self._crystal_angle_cos2) ** 2 + (ne * self._crystal_angle_sin2) ** 2) ** 0.5
+            neff = (ne * no) / (self._crystal_angle_cos2 * (no ** 2) + self._crystal_angle_sin2 * (ne ** 2)) ** 0.5
             return neff
         return (self._ordinary._func(wavelength), self._extraordinary._func(wavelength))
     
@@ -92,6 +92,6 @@ class Birefringent(RefractiveMaterial):
 
             dno = self._ordinary._dfunc(wavelength)
             dne = self._extraordinary._dfunc(wavelength)
-            dneff = ((self._crystal_angle_cos2 * dne) * (no ** 3) + (self._crystal_angle_sin2 * dno) ** (ne ** 3)) / ((no * self._crystal_angle_cos2) ** 2 + (ne * self._crystal_angle_sin2) ** 2) ** (1.5) 
+            dneff = ((self._crystal_angle_cos2 * dne) * (no ** 3) + (self._crystal_angle_sin2 * dno) * (ne ** 3)) / (self._crystal_angle_cos2 * (no ** 2) + self._crystal_angle_sin2 * (ne ** 2)) ** 1.5 
             return dneff
         return (self._ordinary._dfunc(wavelength), self._extraordinary._dfunc(wavelength))
