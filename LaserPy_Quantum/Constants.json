@@ -12,6 +12,7 @@
     "Eta": 0.2,
 
     "Laser_Vol": 1.72e-17,
+    "Laser_Beam_Area": 25e-12,
     "Laser_wavelength": 1550.0e-9,
 
     "Gamma_cap": 0.27,

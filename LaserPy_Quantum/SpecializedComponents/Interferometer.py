@@ -10,7 +10,7 @@ from ..Components.Component import Clock
 
 from .PhotonDetector import SinglePhotonDetector
 
-from .SimpleDevices import PhaseCell
+from .SimpleDevices import PhaseCell, Mirror
 from .SimpleDevices import BeamSplitter
 
 from ..Photon import Photon, Empty_Photon, Photon_dtype
@@ -34,6 +34,9 @@ class AsymmetricMachZehnderInterferometer(Component):
         # Phase controls
         self._short_arm_phase_sample = PhaseCell(name="short_arm_phase_cell")
         self._long_arm_phase_sample = PhaseCell(name="long_arm_phase_cell")
+
+        # Common Mirror
+        self._mirror = Mirror(name="common_mirror")
 
         # Measure ports
         self._SPD0 = SinglePhotonDetector(name="SPD_0")
@@ -121,6 +124,7 @@ class AsymmetricMachZehnderInterferometer(Component):
         photon_short, photon_long = self._input_beam_splitter.simulate(photon)
 
         # long arm
+        photon_long = self._mirror.simulate(photon_long)
         photon_long = self._long_arm_phase_sample.simulate(photon_long)
 
         # Handle buffer
@@ -145,6 +149,7 @@ class AsymmetricMachZehnderInterferometer(Component):
             qubit_index=outgoing_photon['qubit_index'].item(),
             quantum_entangler=outgoing_photon['quantum_entangler']    # Python objects should be stored/retrieved intact
         )
+        photon_long = self._mirror.simulate(photon_long)
 
         self._buffer_idx = (self._buffer_idx + 1) % self._buffer_size
 
@@ -152,7 +157,7 @@ class AsymmetricMachZehnderInterferometer(Component):
         photon_short = self._short_arm_phase_sample.simulate(photon_short)
 
         # Recombine
-        self._photon, self._photon_port2 = self._output_beam_joiner.simulate(photon_short, photon_long)
+        self._photon, self._photon_port2 = self._output_beam_joiner.simulate(photon_long, photon_short)
 
         # Photon Detection
         self._SPD0.simulate(self._photon)

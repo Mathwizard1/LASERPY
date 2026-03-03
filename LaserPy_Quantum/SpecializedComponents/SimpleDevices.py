@@ -85,25 +85,35 @@ class BeamSplitter(Component):
     def set(self, splitting_ratio_t: float):
         """BeamSplitter set method"""
         #return super().set()
-        self._t = sqrt(splitting_ratio_t)
-        self._r = exp(0.5j * pi) * sqrt(1 - splitting_ratio_t)
+        self._t: complex = sqrt(splitting_ratio_t)
+        self._r: complex = exp(0.5j * pi) * sqrt(1 - splitting_ratio_t)
 
     def simulate(self, photon: Photon, photon_port2: Photon|None = None):
         """BeamSplitter simulate method"""
         #return super().simulate(args)
         self._photon_transmitted = Photon.from_photon(photon)
+        net_photons = photon.photon_number
+
         if(photon_port2):
             self._photon_reflected = Photon.from_photon(photon_port2)
+            net_photons += photon_port2.photon_number
         else:
-            self._photon_reflected = Photon.from_photon(photon)
+            self._photon_reflected = Photon.from_photon(Empty_Photon)
 
         # Mixing of fields
         E_T = self._t * self._photon_transmitted.field + self._r * self._photon_reflected.field
         E_R = self._r * self._photon_transmitted.field + self._t * self._photon_reflected.field
 
+        field_T = abs(E_T) ** 2 
+        field_R = abs(E_R) ** 2 
+        net_field = field_T + field_R
+
         # Final photons
         self._photon_transmitted.field = E_T
+        self._photon_transmitted.photon_number = net_photons * field_T / net_field
+
         self._photon_reflected.field = E_R
+        self._photon_reflected.photon_number = net_photons * field_R / net_field
         return self._photon_transmitted, self._photon_reflected
 
     def input_port(self):
@@ -111,7 +121,7 @@ class BeamSplitter(Component):
         #return super().input_port()
         
         # Default port2 electric field
-        kwargs = {'photon':None, 'photon_port2':Empty_Photon}
+        kwargs = {'photon':None, 'photon_port2':None}
         return kwargs
     
     def output_port(self, kwargs: dict = {}):

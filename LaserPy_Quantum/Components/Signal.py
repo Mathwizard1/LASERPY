@@ -1,13 +1,12 @@
 from typing import Any, Self
 
 from numpy import (
-    random,
     mod
 )
 
 from .Component import Clock
 
-from ..Constants import ERR_TOLERANCE
+from ..Constants import ERR_TOLERANCE, RND_GEN
 
 from itertools import count
 
@@ -50,7 +49,7 @@ class LangevinNoise(NoNoise):
 
     def __call__(self):
         """LangevinNoise __call__ method"""
-        return random.normal(loc=self._Mu, scale=self._Std_dev)
+        return RND_GEN.normal(loc=self._Mu, scale=self._Std_dev)
 
 ########################################################
 # Wave definitions

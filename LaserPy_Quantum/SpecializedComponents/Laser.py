@@ -36,6 +36,7 @@ class Laser(DataComponent, TimeComponent):
     _Eta = LaserPyConstants.get('Eta')
 
     _Laser_Vol = LaserPyConstants.get('Laser_Vol')
+    _Laser_Beam_Area = LaserPyConstants.get('Laser_Beam_Area')
 
     _Gamma_cap = LaserPyConstants.get('Gamma_cap')
     _Kappa = LaserPyConstants.get('Kappa')
@@ -68,6 +69,8 @@ class Laser(DataComponent, TimeComponent):
         self.photon: Photon = Photon(ERR_TOLERANCE + 0j, self._free_running_freq)
         """Photon class data for Laser"""
 
+        self._refractive_index = 3.4
+
         # Noise classes for simulations
         self._Fn_t = NoNoise('carrier_NoNoise')
         self._Fs_t = NoNoise('photon_NoNoise')
@@ -93,7 +96,7 @@ class Laser(DataComponent, TimeComponent):
 
     def _power(self):
         """Laser _power method""" 
-        return self.photon_number * self._Laser_Vol * self._Eta * UniversalConstants.H.value * self._free_running_freq / (2 * self._Gamma_cap * self._TAU_P)
+        return self.photon_number * self._Laser_Vol * self._Eta * UniversalConstants.H.value * self._free_running_freq / self._TAU_P
 
     def set_noise(self, Fn_t:NoNoise, Fs_t:NoNoise, Fphi_t:NoNoise):
         """Laser set noise method""" 
@@ -141,7 +144,8 @@ class Laser(DataComponent, TimeComponent):
         self.photon_number = max(self.photon_number, ERR_TOLERANCE)
 
         # Optical field
-        self.photon.field = sqrt(self._power()) * exp(1j * self.phase)
+        P = self._power()
+        self.photon.field = sqrt(2 * P / (self._refractive_index * UniversalConstants.EPSILON_0.value * UniversalConstants.C.value * self._Laser_Beam_Area)) * exp(1j * self.phase)
         self.photon.photon_number = self.photon_number
         self.photon.source_phase = self.phase
 

@@ -56,7 +56,7 @@ class Photon:
         return self.photon_id == other.photon_id
 
     def __str__(self) -> str:
-        return (f"Photon(ω={self.frequency:.4e}rad/s, |E|={self.amplitude:.4e}V/m, φ={self.phase:.2f}rad, id={self.photon_id})")
+        return (f"Photon(ω={self.frequency:.4e}rad/s, |E|={self.amplitude:.4e}V/m, φ={self.phase:.2f}rad, photon_number={self.photon_number:.4e})")
 
     def __repr__(self) -> str:
         return (f"Photon(id={self.photon_id}, qubit_idx={self.qubit_index})")
