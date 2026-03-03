@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaserPy_Quantum.utils.RefractiveMaterials &mdash; LaserPy_Quantum 0.0.9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LaserPy_Quantum
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_Components.html">Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_SpecializedComponents.html">Specialized Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_Others.html">Photon and Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LaserPy_Quantum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">LaserPy_Quantum.utils.RefractiveMaterials</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for LaserPy_Quantum.utils.RefractiveMaterials</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span>
+<span class="p">)</span>
+
+<span class="n">POLARIZATION_AXIS</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SellmeierFormula">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.SellmeierFormula">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SellmeierFormula</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SellmeierFormula class.</span>
+<span class="sd">    It uses coefficients of wavelength in microns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_coeffs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span>
+
+        <span class="c1"># micron units</span>
+        <span class="n">wavelength2</span> <span class="o">=</span> <span class="p">(</span><span class="n">wavelength</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span> <span class="o">/</span> <span class="p">(</span><span class="n">wavelength2</span> <span class="o">-</span> <span class="n">C</span><span class="p">)</span> <span class="o">-</span> <span class="n">D</span> <span class="o">*</span> <span class="n">wavelength2</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">n2</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs</span>
+
+        <span class="c1"># micron units</span>
+        <span class="n">wavelength</span> <span class="o">=</span> <span class="n">wavelength</span> <span class="o">*</span> <span class="mf">1e6</span>
+        <span class="n">dn</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="n">B</span> <span class="o">+</span> <span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="n">wavelength</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">wavelength</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">C</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dn</span></div>
+
+
+<span class="c1">########################################################</span>
+
+<div class="viewcode-block" id="RefractiveMaterial">
+<a class="viewcode-back" href="../../../api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RefractiveMaterial</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;default_refractive_material&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<div class="viewcode-block" id="RefractiveMaterial.n">
+<a class="viewcode-back" href="../../../api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial.n">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">material_axis</span><span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="RefractiveMaterial.dn_dwavelength">
+<a class="viewcode-back" href="../../../api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial.dn_dwavelength">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dn_dwavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">material_axis</span><span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="k">pass</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Isotropic">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.Isotropic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Isotropic</span><span class="p">(</span><span class="n">RefractiveMaterial</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refractive</span><span class="p">:</span> <span class="n">SellmeierFormula</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;default_isotropic_material&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refractive</span> <span class="o">=</span> <span class="n">refractive</span>
+
+<div class="viewcode-block" id="Isotropic.n">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.Isotropic.n">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">material_axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#return super().n(wavelength, material_axis)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refractive</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Isotropic.dn_dwavelength">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.Isotropic.dn_dwavelength">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dn_dwavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">material_axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#return super().dn_dwavelength(wavelength, material_axis)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refractive</span><span class="o">.</span><span class="n">_dfunc</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Birefringent">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.Birefringent">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Birefringent</span><span class="p">(</span><span class="n">RefractiveMaterial</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordinary</span><span class="p">:</span> <span class="n">SellmeierFormula</span><span class="p">,</span> <span class="n">extraordinary</span><span class="p">:</span> <span class="n">SellmeierFormula</span><span class="p">,</span> <span class="n">crystal_angle</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;default_birefringent_material&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span> <span class="o">=</span> <span class="n">ordinary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extraordinary</span> <span class="o">=</span> <span class="n">extraordinary</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_sin2</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">crystal_angle</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_cos2</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">crystal_angle</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+<div class="viewcode-block" id="Birefringent.set">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.Birefringent.set">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crystal_angle</span><span class="p">:</span><span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_sin2</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">crystal_angle</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_cos2</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">crystal_angle</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="Birefringent.n">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.Birefringent.n">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">material_axis</span><span class="p">:</span> <span class="n">POLARIZATION_AXIS</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#return super().n(wavelength, material_axis)</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">material_axis</span> <span class="o">==</span> <span class="s1">&#39;H&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">elif</span><span class="p">(</span><span class="n">material_axis</span> <span class="o">==</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+            <span class="n">no</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+            <span class="n">ne</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extraordinary</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+            <span class="n">neff</span> <span class="o">=</span> <span class="p">(</span><span class="n">ne</span> <span class="o">*</span> <span class="n">no</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_cos2</span> <span class="o">*</span> <span class="p">(</span><span class="n">no</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_sin2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ne</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span>
+            <span class="k">return</span> <span class="n">neff</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extraordinary</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">))</span></div>
+
+    
+<div class="viewcode-block" id="Birefringent.dn_dwavelength">
+<a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.utils.Birefringent.dn_dwavelength">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dn_dwavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">material_axis</span><span class="p">:</span> <span class="n">POLARIZATION_AXIS</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#return super().dn_dwavelength(wavelength, material_axis)</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">material_axis</span> <span class="o">==</span> <span class="s1">&#39;H&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span><span class="o">.</span><span class="n">_dfunc</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="k">elif</span><span class="p">(</span><span class="n">material_axis</span> <span class="o">==</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+            <span class="n">no</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+            <span class="n">ne</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extraordinary</span><span class="o">.</span><span class="n">_func</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+
+            <span class="n">dno</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span><span class="o">.</span><span class="n">_dfunc</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+            <span class="n">dne</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extraordinary</span><span class="o">.</span><span class="n">_dfunc</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+            <span class="n">dneff</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_cos2</span> <span class="o">*</span> <span class="n">dne</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">no</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_sin2</span> <span class="o">*</span> <span class="n">dno</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ne</span> <span class="o">**</span> <span class="mi">3</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_cos2</span> <span class="o">*</span> <span class="p">(</span><span class="n">no</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crystal_angle_sin2</span> <span class="o">*</span> <span class="p">(</span><span class="n">ne</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">**</span> <span class="mf">1.5</span> 
+            <span class="k">return</span> <span class="n">dneff</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ordinary</span><span class="o">.</span><span class="n">_dfunc</span><span class="p">(</span><span class="n">wavelength</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extraordinary</span><span class="o">.</span><span class="n">_dfunc</span><span class="p">(</span><span class="n">wavelength</span><span class="p">))</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Anshurup Gupta.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -82,7 +82,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..Components.Component</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataComponent</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..Constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaserPyConstants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">UniversalConstants</span><span class="p">,</span> <span class="n">LaserPyConstants</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..Photon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Photon</span>
 
@@ -92,12 +92,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    SinglePhotonDetector class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Class variables for SinglePhotonDetector</span>
-    <span class="n">_Eta</span> <span class="o">=</span> <span class="n">LaserPyConstants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Eta&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># SinglePhotonDetector Specific Constants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_Eta</span> <span class="o">=</span> <span class="n">LaserPyConstants</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Eta&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default_single_photon_detector&quot;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;intensity data for SinglePhotonDetector&quot;&quot;&quot;</span>
@@ -123,8 +124,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photon</span><span class="p">:</span> <span class="n">Photon</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;SinglePhotonDetector simulate method&quot;&quot;&quot;</span>
         <span class="c1">#return super().simulate(args)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="n">square</span><span class="p">(</span><span class="n">photon</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span></div>
+        <span class="n">refractive_index</span> <span class="o">=</span> <span class="mf">3.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">refractive_index</span> <span class="o">*</span> <span class="n">UniversalConstants</span><span class="o">.</span><span class="n">EPSILON_0</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">UniversalConstants</span><span class="o">.</span><span class="n">C</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">square</span><span class="p">(</span><span class="n">photon</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span></div>
 
 
         <span class="c1"># TODO: Total photon count</span>

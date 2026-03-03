@@ -84,6 +84,7 @@
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
@@ -117,6 +118,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.BeamSplitter">BeamSplitter (class in LaserPy_Quantum.SpecializedComponents)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_Others.html#LaserPy_Quantum.utils.Birefringent">Birefringent (class in LaserPy_Quantum.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -158,6 +163,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.AsymmetricMachZehnderInterferometer.display_SPD_data">display_SPD_data() (AsymmetricMachZehnderInterferometer method)</a>
 </li>
+      <li><a href="api_Others.html#LaserPy_Quantum.utils.Birefringent.dn_dwavelength">dn_dwavelength() (Birefringent method)</a>
+
+      <ul>
+        <li><a href="api_Others.html#LaserPy_Quantum.utils.Isotropic.dn_dwavelength">(Isotropic method)</a>
+</li>
+        <li><a href="api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial.dn_dwavelength">(RefractiveMaterial method)</a>
+</li>
+      </ul></li>
       <li><a href="api_Components.html#LaserPy_Quantum.Components.Clock.dt">dt (Clock attribute)</a>
 </li>
   </ul></td>
@@ -186,9 +199,13 @@
         <li><a href="api_Components.html#LaserPy_Quantum.Components.Simulator.get_data">(Simulator method)</a>
 </li>
       </ul></li>
+      <li><a href="api_Components.html#LaserPy_Quantum.Components.DataComponent.get_data_units">get_data_units() (DataComponent method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_Components.html#LaserPy_Quantum.Components.DataComponent.get_data_units">get_data_units() (DataComponent method)</a>
+      <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser.get_linewidth">get_linewidth() (Laser method)</a>
+</li>
+      <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser.get_pump_bandwidth">get_pump_bandwidth() (Laser method)</a>
 </li>
       <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.AsymmetricMachZehnderInterferometer.get_SPD_data">get_SPD_data() (AsymmetricMachZehnderInterferometer method)</a>
 </li>
@@ -217,6 +234,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.SinglePhotonDetector.intensity">intensity (SinglePhotonDetector attribute)</a>
+</li>
+      <li><a href="api_Others.html#LaserPy_Quantum.utils.Isotropic">Isotropic (class in LaserPy_Quantum.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -264,6 +283,20 @@
   </ul></td>
 </tr></table>
 
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_Others.html#LaserPy_Quantum.utils.Birefringent.n">n() (Birefringent method)</a>
+
+      <ul>
+        <li><a href="api_Others.html#LaserPy_Quantum.utils.Isotropic.n">(Isotropic method)</a>
+</li>
+        <li><a href="api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial.n">(RefractiveMaterial method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -277,8 +310,6 @@
         <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.CurrentDriver.output_port">(CurrentDriver method)</a>
 </li>
         <li><a href="api_Components.html#LaserPy_Quantum.Components.DataComponent.output_port">(DataComponent method)</a>
-</li>
-        <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser.output_port">(Laser method)</a>
 </li>
         <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.VariableOpticalAttenuator.output_port">(VariableOpticalAttenuator method)</a>
 </li>
@@ -297,18 +328,20 @@
       </ul></li>
       <li><a href="api_Others.html#LaserPy_Quantum.Photon.Photon">Photon (class in LaserPy_Quantum.Photon)</a>
 </li>
+      <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser.photon">photon (Laser attribute)</a>
+</li>
       <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.SinglePhotonDetector.photon_count">photon_count (SinglePhotonDetector attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser.photon_density">photon_density (Laser attribute)</a>
+</li>
+      <li><a href="api_Others.html#LaserPy_Quantum.Photon.Photon.photon_density">photon_density() (Photon method)</a>
+</li>
       <li><a href="api_Others.html#LaserPy_Quantum.Photon.Photon.photon_id">photon_id (Photon attribute)</a>
 </li>
-      <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser.photon_number">photon_number (Laser attribute)</a>
-
-      <ul>
-        <li><a href="api_Others.html#LaserPy_Quantum.Photon.Photon.photon_number">(Photon attribute)</a>
+      <li><a href="api_Others.html#LaserPy_Quantum.Photon.Photon.photon_number">photon_number (Photon attribute)</a>
 </li>
-      </ul></li>
       <li><a href="api_Components.html#LaserPy_Quantum.Components.PulseWave">PulseWave (class in LaserPy_Quantum.Components)</a>
 </li>
   </ul></td>
@@ -331,6 +364,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial">RefractiveMaterial (class in LaserPy_Quantum.utils)</a>
+</li>
       <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.AsymmetricMachZehnderInterferometer.reset">reset() (AsymmetricMachZehnderInterferometer method)</a>
 
       <ul>
@@ -361,10 +396,14 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_Others.html#LaserPy_Quantum.utils.SellmeierFormula">SellmeierFormula (class in LaserPy_Quantum.utils)</a>
+</li>
       <li><a href="api_Components.html#LaserPy_Quantum.Components.ArbitaryWaveGenerator.set">set() (ArbitaryWaveGenerator method)</a>
 
       <ul>
         <li><a href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.BeamSplitter.set">(BeamSplitter method)</a>
+</li>
+        <li><a href="api_Others.html#LaserPy_Quantum.utils.Birefringent.set">(Birefringent method)</a>
 </li>
         <li><a href="api_Components.html#LaserPy_Quantum.Components.Clock.set">(Clock method)</a>
 </li>
@@ -461,6 +500,8 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_Others.html#LaserPy_Quantum.Photon.Photon.wavelength">wavelength (Photon property)</a>
+</li>
       <li><a href="api_Components.html#LaserPy_Quantum.Components.AlternatingPulseWave.WaveSignal">WaveSignal() (AlternatingPulseWave method)</a>
 
       <ul>

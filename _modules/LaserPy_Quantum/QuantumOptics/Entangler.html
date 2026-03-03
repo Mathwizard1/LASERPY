@@ -85,7 +85,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">photons</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Photon</span><span class="p">,</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">photons</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">quantum_state</span> <span class="o">=</span> <span class="n">quantum_state</span> <span class="k">if</span><span class="p">(</span><span class="n">quantum_state</span><span class="p">)</span> <span class="k">else</span> <span class="n">QuantumStateModel</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">photons</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_gates_data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">sync</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_qubits</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -109,11 +108,6 @@
 <div class="viewcode-block" id="QuantumEntangler.apply_gate">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.QuantumEntangler.apply_gate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_gate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gate_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantumStateModel</span><span class="p">:</span>
-        <span class="c1"># TODO: Save Gate circuits in proper order</span>
-        <span class="c1"># if(qubits is None):</span>
-        <span class="c1">#     pass</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     self._gates_data.append((gate_name, qubits))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum_state</span></div>
 
 

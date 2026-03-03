@@ -84,12 +84,12 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.PhotonDetector</span><span class="w"> </span><span class="kn">import</span> <span class="n">SinglePhotonDetector</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.SimpleDevices</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhaseCell</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.SimpleDevices</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhaseCell</span><span class="p">,</span> <span class="n">Mirror</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.SimpleDevices</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeamSplitter</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..Photon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Photon</span><span class="p">,</span> <span class="n">Empty_Photon</span><span class="p">,</span> <span class="n">Photon_dtype</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.HelperPlots</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_class_instances_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.HelperFunctions</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_class_instances_data</span>
 
 <div class="viewcode-block" id="AsymmetricMachZehnderInterferometer">
 <a class="viewcode-back" href="../../../index.html#LaserPy_Quantum.SpecializedComponents.AsymmetricMachZehnderInterferometer">[docs]</a>
@@ -110,6 +110,9 @@
         <span class="c1"># Phase controls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_short_arm_phase_sample</span> <span class="o">=</span> <span class="n">PhaseCell</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;short_arm_phase_cell&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_long_arm_phase_sample</span> <span class="o">=</span> <span class="n">PhaseCell</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;long_arm_phase_cell&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Common Mirror</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mirror</span> <span class="o">=</span> <span class="n">Mirror</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;common_mirror&quot;</span><span class="p">)</span>
 
         <span class="c1"># Measure ports</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_SPD0</span> <span class="o">=</span> <span class="n">SinglePhotonDetector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SPD_0&quot;</span><span class="p">)</span>
@@ -214,6 +217,7 @@
         <span class="n">photon_short</span><span class="p">,</span> <span class="n">photon_long</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_beam_splitter</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">photon</span><span class="p">)</span>
 
         <span class="c1"># long arm</span>
+        <span class="n">photon_long</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mirror</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">photon_long</span><span class="p">)</span>
         <span class="n">photon_long</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_long_arm_phase_sample</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">photon_long</span><span class="p">)</span>
 
         <span class="c1"># Handle buffer</span>
@@ -238,6 +242,7 @@
             <span class="n">qubit_index</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;qubit_index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
             <span class="n">quantum_entangler</span><span class="o">=</span><span class="n">outgoing_photon</span><span class="p">[</span><span class="s1">&#39;quantum_entangler&#39;</span><span class="p">]</span>    <span class="c1"># Python objects should be stored/retrieved intact</span>
         <span class="p">)</span>
+        <span class="n">photon_long</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mirror</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">photon_long</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span>
 
@@ -245,7 +250,7 @@
         <span class="n">photon_short</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_short_arm_phase_sample</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">photon_short</span><span class="p">)</span>
 
         <span class="c1"># Recombine</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_photon_port2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_beam_joiner</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">photon_short</span><span class="p">,</span> <span class="n">photon_long</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_photon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_photon_port2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_beam_joiner</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">photon_long</span><span class="p">,</span> <span class="n">photon_short</span><span class="p">)</span>
 
         <span class="c1"># Photon Detection</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_SPD0</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_photon</span><span class="p">)</span>

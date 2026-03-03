@@ -58,15 +58,17 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lasers">Lasers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser"><code class="docutils literal notranslate"><span class="pre">Laser</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.photon_number"><code class="docutils literal notranslate"><span class="pre">Laser.photon_number</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.photon_density"><code class="docutils literal notranslate"><span class="pre">Laser.photon_density</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.carrier"><code class="docutils literal notranslate"><span class="pre">Laser.carrier</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.phase"><code class="docutils literal notranslate"><span class="pre">Laser.phase</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.current"><code class="docutils literal notranslate"><span class="pre">Laser.current</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.photon"><code class="docutils literal notranslate"><span class="pre">Laser.photon</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.set_noise"><code class="docutils literal notranslate"><span class="pre">Laser.set_noise()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.set_slave_Laser"><code class="docutils literal notranslate"><span class="pre">Laser.set_slave_Laser()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.simulate"><code class="docutils literal notranslate"><span class="pre">Laser.simulate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.input_port"><code class="docutils literal notranslate"><span class="pre">Laser.input_port()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.output_port"><code class="docutils literal notranslate"><span class="pre">Laser.output_port()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.get_linewidth"><code class="docutils literal notranslate"><span class="pre">Laser.get_linewidth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#LaserPy_Quantum.SpecializedComponents.Laser.get_pump_bandwidth"><code class="docutils literal notranslate"><span class="pre">Laser.get_pump_bandwidth()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -189,8 +191,8 @@
 <dd><p>Bases: <a class="reference internal" href="api_Components.html#LaserPy_Quantum.Components.DataComponent" title="LaserPy_Quantum.Components.Component.DataComponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataComponent</span></code></a>, <a class="reference internal" href="api_Components.html#LaserPy_Quantum.Components.TimeComponent" title="LaserPy_Quantum.Components.Component.TimeComponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeComponent</span></code></a></p>
 <p>Laser class</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="LaserPy_Quantum.SpecializedComponents.Laser.photon_number">
-<span class="sig-name descname"><span class="pre">photon_number</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.SpecializedComponents.Laser.photon_number" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="LaserPy_Quantum.SpecializedComponents.Laser.photon_density">
+<span class="sig-name descname"><span class="pre">photon_density</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.SpecializedComponents.Laser.photon_density" title="Link to this definition"></a></dt>
 <dd><p>photon number data for Laser</p>
 </dd></dl>
 
@@ -210,6 +212,12 @@
 <dt class="sig sig-object py" id="LaserPy_Quantum.SpecializedComponents.Laser.current">
 <span class="sig-name descname"><span class="pre">current</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#LaserPy_Quantum.SpecializedComponents.Laser.current" title="Link to this definition"></a></dt>
 <dd><p>current data for Laser</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="LaserPy_Quantum.SpecializedComponents.Laser.photon">
+<span class="sig-name descname"><span class="pre">photon</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="api_Others.html#LaserPy_Quantum.Photon.Photon" title="LaserPy_Quantum.Photon.Photon"><span class="pre">Photon</span></a></span><a class="headerlink" href="#LaserPy_Quantum.SpecializedComponents.Laser.photon" title="Link to this definition"></a></dt>
+<dd><p>Photon class data for Laser</p>
 </dd></dl>
 
 <dl class="py method">
@@ -237,10 +245,14 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="LaserPy_Quantum.SpecializedComponents.Laser.output_port">
-<span class="sig-name descname"><span class="pre">output_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/SpecializedComponents/Laser.html#Laser.output_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LaserPy_Quantum.SpecializedComponents.Laser.output_port" title="Link to this definition"></a></dt>
-<dd><p>Laser output port method</p>
-</dd></dl>
+<dt class="sig sig-object py" id="LaserPy_Quantum.SpecializedComponents.Laser.get_linewidth">
+<span class="sig-name descname"><span class="pre">get_linewidth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/SpecializedComponents/Laser.html#Laser.get_linewidth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LaserPy_Quantum.SpecializedComponents.Laser.get_linewidth" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="LaserPy_Quantum.SpecializedComponents.Laser.get_pump_bandwidth">
+<span class="sig-name descname"><span class="pre">get_pump_bandwidth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/SpecializedComponents/Laser.html#Laser.get_pump_bandwidth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#LaserPy_Quantum.SpecializedComponents.Laser.get_pump_bandwidth" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

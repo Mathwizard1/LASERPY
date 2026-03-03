@@ -516,7 +516,7 @@ If <strong>_t_sample</strong> exceeds <strong>_sampling_rate</strong> then sets 
 <p>Laser class</p>
 <dl class="py attribute">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">photon_number</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span></dt>
+<span class="sig-name descname"><span class="pre">photon_density</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span></dt>
 <dd><p>photon number data for Laser</p>
 </dd></dl>
 
@@ -536,6 +536,12 @@ If <strong>_t_sample</strong> exceeds <strong>_sampling_rate</strong> then sets 
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">current</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span></dt>
 <dd><p>current data for Laser</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">photon</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="api_Others.html#LaserPy_Quantum.Photon.Photon" title="LaserPy_Quantum.Photon.Photon"><span class="pre">Photon</span></a></span></dt>
+<dd><p>Photon class data for Laser</p>
 </dd></dl>
 
 <dl class="py method">
@@ -564,9 +570,13 @@ If <strong>_t_sample</strong> exceeds <strong>_sampling_rate</strong> then sets 
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">output_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/SpecializedComponents/Laser.html#Laser.output_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Laser output port method</p>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">get_linewidth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/SpecializedComponents/Laser.html#Laser.get_linewidth"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">get_pump_bandwidth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/SpecializedComponents/Laser.html#Laser.get_pump_bandwidth"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -764,6 +774,17 @@ If <strong>_t_sample</strong> exceeds <strong>_sampling_rate</strong> then sets 
 <dd><p>phase (rad) of the field</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wavelength</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span></dt>
+<dd><p>wavelength (m) of the photon</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">photon_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Vol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/Photon.html#Photon.photon_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">qubit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/Photon.html#Photon.qubit"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -771,15 +792,60 @@ If <strong>_t_sample</strong> exceeds <strong>_sampling_rate</strong> then sets 
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SellmeierFormula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_coeffs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#SellmeierFormula"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>SellmeierFormula class.
+It uses coefficients of wavelength in microns.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Isotropic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refractive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="api_Others.html#LaserPy_Quantum.utils.SellmeierFormula" title="LaserPy_Quantum.utils.RefractiveMaterials.SellmeierFormula"><span class="pre">SellmeierFormula</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default_isotropic_material'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#Isotropic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial" title="LaserPy_Quantum.utils.RefractiveMaterials.RefractiveMaterial"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefractiveMaterial</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#Isotropic.n"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">dn_dwavelength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#Isotropic.dn_dwavelength"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Birefringent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordinary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="api_Others.html#LaserPy_Quantum.utils.SellmeierFormula" title="LaserPy_Quantum.utils.RefractiveMaterials.SellmeierFormula"><span class="pre">SellmeierFormula</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">extraordinary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="api_Others.html#LaserPy_Quantum.utils.SellmeierFormula" title="LaserPy_Quantum.utils.RefractiveMaterials.SellmeierFormula"><span class="pre">SellmeierFormula</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">crystal_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default_birefringent_material'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#Birefringent"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="api_Others.html#LaserPy_Quantum.utils.RefractiveMaterial" title="LaserPy_Quantum.utils.RefractiveMaterials.RefractiveMaterial"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefractiveMaterial</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crystal_angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#Birefringent.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'H'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'V'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#Birefringent.n"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">dn_dwavelength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'H'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'V'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/RefractiveMaterials.html#Birefringent.dn_dwavelength"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">display_class_instances_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="api_Components.html#LaserPy_Quantum.Components.DataComponent" title="LaserPy_Quantum.Components.Component.DataComponent"><span class="pre">DataComponent</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/HelperPlots.html#display_class_instances_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">display_class_instances_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="api_Components.html#LaserPy_Quantum.Components.DataComponent" title="LaserPy_Quantum.Components.Component.DataComponent"><span class="pre">DataComponent</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/HelperFunctions.html#display_class_instances_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>display merged graph for comparision of same class members data</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_time_delay_phase_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser" title="LaserPy_Quantum.SpecializedComponents.Laser.Laser"><span class="pre">Laser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/HelperPlots.html#get_time_delay_phase_correction"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">get_time_delay_phase_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">laser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="api_SpecializedComponents.html#LaserPy_Quantum.SpecializedComponents.Laser" title="LaserPy_Quantum.SpecializedComponents.Laser.Laser"><span class="pre">Laser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LaserPy_Quantum/utils/HelperFunctions.html#get_time_delay_phase_correction"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate the phase correction for a given time delay.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
