@@ -4,7 +4,7 @@ from typing import Literal
 from dataclasses import dataclass
 
 from numpy import (
-    array,
+    array, ndarray, ones,
     sinc,
     pi
 )
@@ -37,7 +37,7 @@ class PhotonPairGeneratorCrystal(DataComponent):
         # PhotonPairGeneratorCrystal Specific Constants
         self._deff = LaserPyConstants.get('deff')
 
-    def __init__(self, refractive_material: RefractiveMaterial, SPDC_type: SPDC_TYPE= 'II', length: float|None = None, poling_period: float|None = None, name: str = "default_photon_pair_generator_crystal"):
+    def __init__(self, refractive_material: RefractiveMaterial, SPDC_type: SPDC_TYPE= 'II', length: float|None = None, poling_period: float|None = None, gaussian_dimension: Literal[1, 2] = 1, name: str = "default_photon_pair_generator_crystal"):
         super().__init__(name)
         self._setup()
 
@@ -57,11 +57,7 @@ class PhotonPairGeneratorCrystal(DataComponent):
         self._simulation_data_units = {'omega_s':r" $(Hz)$", 'omega_i':r" $(Hz)$", 'delta_K':r" $(rad/m)$", 'pair_rate':r" $(per photon)$"}
 
         self._refractive_material = refractive_material
-        if(length is None):
-            length = LaserPyConstants.get('Crystal_length')
-        self._length = length 
-        self._poling_period = poling_period        
-        
+            
         # Polarization conventions based on SPDC type
         self._SPDC_type = SPDC_type
 
@@ -72,11 +68,15 @@ class PhotonPairGeneratorCrystal(DataComponent):
         else:
             self._polarizations = ParametricTriple('V', 'V', 'H')
 
-        self._pump_bandwidth = 0.0
+        if(length is None):
+            length = LaserPyConstants.get('Crystal_length')
+        self._length = length 
+        self._poling_period = poling_period    
 
-    def set_laser(self, laser: Laser):
-        #return super().set()
-        self._pump_bandwidth = laser.get_pump_bandwidth()
+        # Corresponding gaussian JSA
+        self._gaussian_JSA = self._1Dgaussian_JSA if(gaussian_dimension == 1) else self._2Dgaussian_JSA
+
+        self._pump_bandwidth = 0.0
 
     def _QS(self):
         state = array([0, 0, 0, 0], dtype= complex)
@@ -92,7 +92,7 @@ class PhotonPairGeneratorCrystal(DataComponent):
         ng = self._refractive_material.n(wavelength, polarization) - wavelength * self._refractive_material.dn_dwavelength(wavelength, polarization)
         return ng
 
-    def _gaussian_JSA(self, photon: Photon):
+    def _1Dgaussian_JSA(self, photon: Photon):
         pump_wavelength = photon.wavelength
         degenerate_wavelength = 2 * pump_wavelength
 
@@ -109,6 +109,29 @@ class PhotonPairGeneratorCrystal(DataComponent):
         omega_s = RND_GEN.normal(loc= 0.5 * photon.frequency, scale= sigma_omega_s)
         omega_i = photon.frequency - omega_s
         return omega_s, omega_i
+
+    def _2Dgaussian_JSA(self, photon: Photon):
+        pump_wavelength = photon.wavelength
+        degenerate_wavelength = 2 * pump_wavelength
+
+        ng_p = self._group_index(pump_wavelength, self._polarizations.pump)
+        ng_s = self._group_index(degenerate_wavelength, self._polarizations.signal)
+        ng_i = self._group_index(degenerate_wavelength, self._polarizations.idler)
+
+        sigma_wavelength = 0.88 * (degenerate_wavelength ** 2) / (2.355 * self._length * abs(ng_s - ng_i))
+        
+        sigma_omega_pm = (2 * pi * UniversalConstants.C.value / (degenerate_wavelength ** 2)) * sigma_wavelength
+
+        # Spectral Anti-Correlation Factor
+        rho = -0.999 #(ng_p - ng_s) / ((ng_p - ng_s) ** 2 + (ng_p - ng_i) ** 2) ** 0.5 
+
+        mean = 0.5 * photon.frequency * ones(2)
+        cov = (sigma_omega_pm ** 2) * array([[1, rho], [rho, 1]])
+        return  RND_GEN.multivariate_normal(mean=mean, cov=cov)
+
+    def set_laser(self, laser: Laser):
+        #return super().set()
+        self._pump_bandwidth = laser.get_pump_bandwidth()
 
     def simulate(self, photon: Photon):
         #return super().simulate(args)
@@ -135,21 +158,20 @@ class PhotonPairGeneratorCrystal(DataComponent):
         # np.sinc(x) = sin(pi * x) / (pi * x)
         phase_term = sinc(self.delta_K * self._length / (2 * pi)) ** 2
 
-        gain = (self._deff * photon.frequency * photon.amplitude * self._length / (np * ns * ni * UniversalConstants.EPSILON_0.value *UniversalConstants.C.value)) ** 2
+        gain = (self._deff * photon.frequency * photon.amplitude * self._length / (np * UniversalConstants.C.value)) ** 2
         self.pair_rate = gain * phase_term
 
+        # Experimental
+        return
+
         # Actual Pair generation
-        try:
-            N_pairs = RND_GEN.poisson(self.pair_rate * photon.photon_number)
-            if (N_pairs < 1):
-                self.omega_s = ERR_TOLERANCE
-                self.omega_i = ERR_TOLERANCE
-                self.signal = Photon.from_photon(Empty_Photon)
-                self.idler = Photon.from_photon(Empty_Photon)
-                return
-        except Exception as e:
-            print(f"SPDC Poisson:{self.pair_rate * photon.photon_number} Additional:{e}")
-            exit()
+        N_pairs = RND_GEN.poisson(self.pair_rate * photon.photon_number)
+        if (N_pairs < 1):
+            self.omega_s = ERR_TOLERANCE
+            self.omega_i = ERR_TOLERANCE
+            self.signal = Photon.from_photon(Empty_Photon)
+            self.idler = Photon.from_photon(Empty_Photon)
+            return
 
         # Other Photon data
         signal_photon.photon_number = N_pairs

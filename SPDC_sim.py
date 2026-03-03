@@ -12,7 +12,13 @@ from LaserPy_Quantum.SpecializedComponents import SinglePhotonDetector
 from LaserPy_Quantum.SpecializedComponents.PhotonPairGenerator import PhotonPairGeneratorCrystal
 from LaserPy_Quantum.utils.RefractiveMaterials import Birefringent, SellmeierFormula
 
-from numpy import pi
+from LaserPy_Quantum.utils.HelperFunctions import (
+    fast_scatter,
+    fast_density_plot
+)
+
+from numpy import pi, mean
+import matplotlib.pyplot as plt
 
 ############################################################################
 # Switch Laser Type
@@ -49,16 +55,17 @@ BBO = Birefringent(
 SPDC = PhotonPairGeneratorCrystal(
     refractive_material= BBO,
     SPDC_type= 'II',
+    gaussian_dimension= 2,
 )
 
 ############################################################################
 
 # best_angle = 0.0
 # theta = 0.0
-# while(theta < pi):
+# while(theta < 1):
 #     BBO.set(theta)
     
-#     theta += pi / 20
+#     theta += 0.01
 
 # exit(0)
 
@@ -71,7 +78,7 @@ laser = Laser(name= "pump_laser")
 SPD = SinglePhotonDetector()
 
 simulator_clock = Clock(dt, sampling_rate)
-simulator_clock.set(t_unit * 5)
+simulator_clock.set(t_unit * 10)
 
 simulator = Simulator(simulator_clock)
 
@@ -79,23 +86,6 @@ simulator.set((
     Connection(simulator_clock, current_driver),
     Connection(current_driver, laser),
     Connection(laser, SPD),
-))
-
-simulator.reset(True)
-
-simulator.simulate()
-time_data = simulator.get_data()
-
-laser.display_data(time_data)
-#SPD.display_data(time_data)
-############################################################################
-simulator.reset_data()
-
-simulator_clock.set(t_unit * 10)
-
-simulator.set((
-    Connection(simulator_clock, current_driver),
-    Connection(current_driver, laser),
     Connection(laser, SPDC),
 ))
 
@@ -105,5 +95,16 @@ simulator.simulate()
 time_data = simulator.get_data()
 
 #laser.display_data(time_data)
+#SPD.display_data(time_data)
 SPDC.display_data(time_data)
 
+SPDC_data = SPDC.get_data()
+#print(SPDC_data.keys())
+
+
+delta_K = SPDC_data['delta_K']
+
+min_scaled_delta_K = (delta_K - delta_K.min()) / (delta_K.max() - delta_K.min())
+Z_scaled_delta_K = (delta_K - delta_K.mean()) / delta_K.std()
+
+fast_scatter(SPDC_data['omega_s'],SPDC_data['omega_i'], Z_scaled_delta_K)

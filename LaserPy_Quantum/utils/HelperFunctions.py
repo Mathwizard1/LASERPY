@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from numpy import (
     ndarray,
-    array, mod,
+    array, mod, mean,
     pi
 )
 from ..Components.Component import DataComponent
@@ -61,6 +61,29 @@ def display_class_instances_data(class_instances: tuple[DataComponent,...], time
     plt.tight_layout()
     plt.show()
         
+def fast_scatter(x: ndarray, y: ndarray, c: ndarray|None=None, s: ndarray|None=None, title: str = "ScatterPlot"):
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sc = ax.scatter(x, y, s=s, c=s, edgecolors='none', alpha=0.8)
+    if(c is not None): 
+        cbar = plt.colorbar(sc)
+        cbar.set_label('Color Range')
+    ax.set_title(title)
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    
+    plt.show()
+
+def fast_density_plot(x:ndarray, y:ndarray, weights:ndarray|None = None, grid: int = 50):
+    plt.figure(figsize=(10, 7))
+    hb = plt.hexbin(x, y, C=weights, gridsize=grid, reduce_C_function= mean, mincnt=1)
+    cb = plt.colorbar(hb)
+    cb.set_label('Mean Intensity (C)')
+    plt.title(f"Hexagonal Binning (Grid Size: {grid})")
+    plt.xlabel("X Position")
+    plt.ylabel("Y Position")
+    
+    plt.show()
+
 ########## Circulator Dependency Resolved ##########
 from ..SpecializedComponents.Laser import Laser
 
