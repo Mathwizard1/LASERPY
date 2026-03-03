@@ -3,6 +3,10 @@ from typing import Any, Literal
 
 from dataclasses import dataclass
 
+from numpy import (
+    cos, sin
+)
+
 POLARIZATION_AXIS = Literal['H', 'V']
 
 @dataclass(frozen= True, slots= True)
@@ -54,18 +58,28 @@ class Isotropic(RefractiveMaterial):
         return self._refractive._dfunc(wavelength)
 
 class Birefringent(RefractiveMaterial):
-    def __init__(self, ordinary: SellmeierFormula, extraordinary: SellmeierFormula, name="default_birefringent_material"):
+    def __init__(self, ordinary: SellmeierFormula, extraordinary: SellmeierFormula, crystal_angle=0.0, name="default_birefringent_material"):
         super().__init__(name)
 
         self._ordinary = ordinary
         self._extraordinary = extraordinary
+
+        self._crystal_angle_sin2 = sin(crystal_angle) ** 2
+        self._crystal_angle_cos2 = cos(crystal_angle) ** 2
+
+    def set(self, crystal_angle:float):
+        self._crystal_angle_sin2 = sin(crystal_angle) ** 2
+        self._crystal_angle_cos2 = cos(crystal_angle) ** 2
 
     def n(self, wavelength: float, material_axis: POLARIZATION_AXIS|None= None):
         #return super().n(wavelength, material_axis)
         if(material_axis == 'H'):
             return self._ordinary._func(wavelength)
         elif(material_axis == 'V'):
-            return self._extraordinary._func(wavelength)
+            no = self._ordinary._func(wavelength)
+            ne = self._extraordinary._func(wavelength)
+            neff = (ne * no) / ((no * self._crystal_angle_cos2) ** 2 + (ne * self._crystal_angle_sin2) ** 2) ** 0.5
+            return neff
         return (self._ordinary._func(wavelength), self._extraordinary._func(wavelength))
     
     def dn_dwavelength(self, wavelength: float, material_axis: POLARIZATION_AXIS|None= None):
@@ -73,5 +87,11 @@ class Birefringent(RefractiveMaterial):
         if(material_axis == 'H'):
             return self._ordinary._dfunc(wavelength)
         elif(material_axis == 'V'):
-            return self._extraordinary._dfunc(wavelength)
+            no = self._ordinary._func(wavelength)
+            ne = self._extraordinary._func(wavelength)
+
+            dno = self._ordinary._dfunc(wavelength)
+            dne = self._extraordinary._dfunc(wavelength)
+            dneff = ((self._crystal_angle_cos2 * dne) * (no ** 3) + (self._crystal_angle_sin2 * dno) ** (ne ** 3)) / ((no * self._crystal_angle_cos2) ** 2 + (ne * self._crystal_angle_sin2) ** 2) ** (1.5) 
+            return dneff
         return (self._ordinary._dfunc(wavelength), self._extraordinary._dfunc(wavelength))

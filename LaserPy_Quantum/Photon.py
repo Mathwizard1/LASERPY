@@ -92,6 +92,9 @@ class Photon:
         """wavelength (m) of the photon"""
         return 2 * pi * UniversalConstants.C.value / self.frequency
 
+    def photon_density(self, Vol: float):
+        return self.photon_number / Vol
+
     def qubit(self):        
         QE = self.quantum_entangler
         if(QE is None):

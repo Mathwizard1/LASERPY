@@ -164,6 +164,6 @@ class Simulator(DataComponent):
             except Exception as e:
                 # Handle any unexpected exceptions
                 print(f"DEBUG {self}:: An unexpected error occurred: {e}")
-                return
+                exit()
             self.simulation_clock.update()
         print(f"Simulations Complete: {len(self._simulation_data)} samples")
