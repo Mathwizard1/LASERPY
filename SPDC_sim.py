@@ -7,20 +7,21 @@ from LaserPy_Quantum import (
 from LaserPy_Quantum import CurrentDriver
 from LaserPy_Quantum import Laser
 
+from LaserPy_Quantum.SpecializedComponents import SinglePhotonDetector
+
 from LaserPy_Quantum.SpecializedComponents.PhotonPairGenerator import PhotonPairGeneratorCrystal
 from LaserPy_Quantum.utils.RefractiveMaterials import Birefringent, SellmeierFormula
+
+from numpy import pi
 
 # Control Constants (all in SI units)
 dt = 1e-12
 t_unit = 1e-9
-t_final = t_unit * 10
 sampling_rate = 2
-
-RESET_MODE = True
 
 # Current Constants
 I_th = 0.0178
-MASTER_BASE_DC = 1.4 * I_th
+MASTER_BASE_DC = 1.4 * I_th # 25 mA
 
 # Steady above lasing current
 mBase = StaticWave("mBase", MASTER_BASE_DC)
@@ -43,21 +44,50 @@ SPDC = PhotonPairGeneratorCrystal(
 
 ############################################################################
 
+# best_angle = 0.0
+# theta = 0.0
+# while(theta < pi):
+#     BBO.set(theta)
+    
+#     theta += pi / 20
+
+# exit(0)
+
+############################################################################
+
 current_driver = CurrentDriver(AWG)
 current_driver.set(mBase)
 
-laser = Laser(name= "pump_laser")
+laser = Laser(laser_wavelength= 405e-9, name= "pump_laser")
+SPD = SinglePhotonDetector()
 
 simulator_clock = Clock(dt, sampling_rate)
-simulator_clock.set(t_final)
+simulator_clock.set(t_unit * 5)
 
 simulator = Simulator(simulator_clock)
-
-############################################################################
 
 simulator.set((
     Connection(simulator_clock, current_driver),
     Connection(current_driver, laser),
+    Connection(laser, SPD),
+))
+
+simulator.reset(True)
+
+simulator.simulate()
+time_data = simulator.get_data()
+
+#laser.display_data(time_data)
+SPD.display_data(time_data)
+############################################################################
+simulator.reset_data()
+
+simulator_clock.set(t_unit * 10, t= 0.0)
+
+simulator.set((
+    Connection(simulator_clock, current_driver),
+    Connection(current_driver, laser),
+    Connection(laser, SPD),
     Connection(laser, SPDC),
 ))
 
@@ -66,7 +96,6 @@ simulator.reset(True)
 simulator.simulate()
 time_data = simulator.get_data()
 
-laser.display_data(time_data)
-
-exit(code= 0)
+#laser.display_data(time_data)
+SPDC.display_data(time_data)
 

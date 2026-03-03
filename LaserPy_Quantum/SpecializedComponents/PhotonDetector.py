@@ -8,7 +8,7 @@ from numpy import (
 
 from ..Components.Component import DataComponent
 
-from ..Constants import LaserPyConstants
+from ..Constants import UniversalConstants, LaserPyConstants
 
 from ..Photon import Photon
 
@@ -42,8 +42,8 @@ class SinglePhotonDetector(DataComponent):
     def simulate(self, photon: Photon):
         """SinglePhotonDetector simulate method"""
         #return super().simulate(args)
-        
-        self.intensity = square(photon.amplitude)
+        refractive_index = 3.4
+        self.intensity = 0.5 * refractive_index * UniversalConstants.EPSILON_0.value * UniversalConstants.C.value * square(photon.amplitude)
 
         # TODO: Total photon count
         # incident_photons = random.poisson(self.intensity)

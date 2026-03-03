@@ -43,7 +43,7 @@ class Laser(DataComponent, TimeComponent):
 
     def __init__(self, laser_wavelength:float|None = None, name: str = "default_laser"):
         super().__init__(name)
-        self.photon_number: float = ERR_TOLERANCE
+        self.photon_density: float = ERR_TOLERANCE
         """photon number data for Laser"""
 
         self.carrier: float = self._N_transparent
@@ -56,8 +56,8 @@ class Laser(DataComponent, TimeComponent):
         """current data for Laser"""
 
         # Data storage
-        self._simulation_data = {'current':[], 'photon_number':[], 'carrier':[], 'phase':[]}
-        self._simulation_data_units = {'current':r" $(Amp)$", 'photon_number':r" $(m^{-3})$",
+        self._simulation_data = {'current':[], 'photon_density':[], 'carrier':[], 'phase':[]}
+        self._simulation_data_units = {'current':r" $(Amp)$", 'photon_density':r" $(m^{-3})$",
                                            'carrier':r" $(m^{-3})$", 'phase':r" $(rad)$"}
 
         # Laser class private data
@@ -81,12 +81,12 @@ class Laser(DataComponent, TimeComponent):
 
     def _dN_dt(self):
         """Delta number of carrier method"""
-        dN_dt = self.current / (UniversalConstants.CHARGE.value * self._Laser_Vol) - self.carrier / self._TAU_N - self._g * ((self.carrier - self._N_transparent) / (1 + self._Epsilon * self.photon_number)) * self.photon_number + self._Fn_t()
+        dN_dt = self.current / (UniversalConstants.CHARGE.value * self._Laser_Vol) - self.carrier / self._TAU_N - self._g * ((self.carrier - self._N_transparent) / (1 + self._Epsilon * self.photon_density)) * self.photon_density + self._Fn_t()
         return dN_dt
 
     def _dS_dt(self):
         """Delta number of photon method"""
-        dS_dt = self._Gamma_cap * self._g * ((self.carrier - self._N_transparent) / (1 + self._Epsilon * self.photon_number)) * self.photon_number - self.photon_number / self._TAU_P + self._Gamma_cap * self._Beta * self.carrier / self._TAU_N + self._Fs_t()
+        dS_dt = self._Gamma_cap * self._g * ((self.carrier - self._N_transparent) / (1 + self._Epsilon * self.photon_density)) * self.photon_density - self.photon_density / self._TAU_P + self._Gamma_cap * self._Beta * self.carrier / self._TAU_N + self._Fs_t()
         return dS_dt
 
     def _dPhi_dt(self):
@@ -96,7 +96,7 @@ class Laser(DataComponent, TimeComponent):
 
     def _power(self):
         """Laser _power method""" 
-        return self.photon_number * self._Laser_Vol * self._Eta * UniversalConstants.H.value * self._free_running_freq / self._TAU_P
+        return self.photon_density * self._Laser_Vol * self._Eta * UniversalConstants.H.value * self._free_running_freq / self._TAU_P
 
     def set_noise(self, Fn_t:NoNoise, Fs_t:NoNoise, Fphi_t:NoNoise):
         """Laser set noise method""" 
@@ -126,27 +126,28 @@ class Laser(DataComponent, TimeComponent):
                 photon = (photon,)
 
             # Multi Master laser lock
-            for single_photon in photon:
-                delta_phase = self.phase - single_photon.source_phase
-                master_freq_detuning = (self._free_running_freq - single_photon.frequency) * clock.t
+            for injection_photon in photon:
+                delta_phase = self.phase - injection_photon.source_phase
+                master_freq_detuning = (self._free_running_freq - injection_photon.frequency) * clock.t
                 
                 # Injection terms effects
-                dS_dt += 2 * self._Kappa * sqrt(single_photon.photon_number * self.photon_number) * cos(delta_phase - master_freq_detuning)
-                dPhi_dt -= self._Kappa * sqrt(single_photon.photon_number / self.photon_number) * sin(delta_phase - master_freq_detuning)
+                S_inj = injection_photon.photon_density(self._Laser_Vol)
+                dS_dt += 2 * self._Kappa * sqrt(S_inj * self.photon_density) * cos(delta_phase - master_freq_detuning)
+                dPhi_dt -= self._Kappa * sqrt(S_inj / self.photon_density) * sin(delta_phase - master_freq_detuning)
 
         # Time step update (Euler Integration)
         self.carrier += dN_dt * clock.dt
-        self.photon_number += dS_dt * clock.dt
+        self.photon_density += dS_dt * clock.dt
         self.phase += dPhi_dt * clock.dt
 
         # Value corrections
         self.carrier = max(self.carrier, ERR_TOLERANCE)
-        self.photon_number = max(self.photon_number, ERR_TOLERANCE)
+        self.photon_density = max(self.photon_density, ERR_TOLERANCE)
 
         # Optical field
         P = self._power()
         self.photon.field = sqrt(2 * P / (self._refractive_index * UniversalConstants.EPSILON_0.value * UniversalConstants.C.value * self._Laser_Beam_Area)) * exp(1j * self.phase)
-        self.photon.photon_number = self.photon_number
+        self.photon.photon_number = self.photon_density * self._Laser_Vol
         self.photon.source_phase = self.phase
 
     def input_port(self):
@@ -157,7 +158,7 @@ class Laser(DataComponent, TimeComponent):
     
     def get_linewidth(self):
         Rsp = self._Beta * self.carrier / self._TAU_N
-        delta_nu = self._Gamma_cap * Rsp * (1 + self._Alpha ** 2) / (4 * pi * self.photon_number)
+        delta_nu = self._Gamma_cap * Rsp * (1 + self._Alpha ** 2) / (4 * pi * self.photon_density)
         return delta_nu
 
     def get_pump_bandwidth(self):
